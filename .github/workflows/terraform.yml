@@ -40,8 +40,8 @@ jobs:
       continue-on-error: true
       run: terraform init
 
-    - name: ls all
-      run: ls -la
+    - name: debug
+      run: base64 .terraform/terraform.tfstate
 
     - name: Terraform Format
       run: terraform fmt -check
