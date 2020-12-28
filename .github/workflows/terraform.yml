@@ -1,10 +1,10 @@
 name: 'Terraform'
 
-on:
-  push:
-    branches:
-    - $default-branch
-  pull_request:
+on: [push]
+#  push:
+#    branches:
+#    - $default-branch
+#  pull_request:
 
 jobs:
   terraform:
