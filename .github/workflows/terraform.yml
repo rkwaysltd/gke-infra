@@ -3,8 +3,8 @@ name: 'Terraform'
 on:
   push:
     branches:
-    - $default-branch
-#  pull_request:
+    - main
+  pull_request:
 
 jobs:
   terraform:
@@ -53,5 +53,5 @@ jobs:
         GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
-      if: github.ref == 'refs/heads/$default-branch' && github.event_name == 'push'
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
