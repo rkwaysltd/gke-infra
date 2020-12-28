@@ -1,2 +1,9 @@
-project_id = "${PROJECT_ID}"
-region     = "europe-west2"
+project_id         = "${PROJECT_ID}"
+region             = "europe-west2"
+zones              = ["europe-west2-a", "europe-west2-b", "europe-west2-c"]
+name               = "krampus"
+machine_type       = "g1-small"
+min_count          = 1
+max_count          = 3
+disk_size_gb       = 10
+initial_node_count = 1

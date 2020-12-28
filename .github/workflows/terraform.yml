@@ -18,6 +18,7 @@ jobs:
     env:
       TF_STATE_BUCKET: ${{ secrets.TF_STATE_BUCKET }}
       PROJECT_ID: ${{ secrets.PROJECT_ID }}
+      GOOGLE_APPLICATION_CREDENTIALS: /tmp/account.json
 
     steps:
     - name: Checkout
@@ -25,6 +26,11 @@ jobs:
 
     - name: Render templates
       run: ./render_tmpl.sh
+
+    - name: Create credentials file
+      env:
+        APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+      run: echo "${APPLICATION_CREDENTIALS}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
@@ -40,7 +46,6 @@ jobs:
       id: init
       env:
         GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
       run: terraform init
 
@@ -52,7 +57,6 @@ jobs:
       id: plan
       env:
         GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
       run: terraform plan -no-color
 
