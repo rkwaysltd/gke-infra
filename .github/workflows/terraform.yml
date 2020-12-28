@@ -28,11 +28,8 @@ jobs:
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
-#      with:
-#        terraform_version: 0.14.3
-
-    - name: ls all
-      run: ls -la
+      with:
+        terraform_version: 0.14.3
 
     - name: Terraform Init
       env:
@@ -40,7 +37,11 @@ jobs:
         GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
-      run: terraform init -reconfigure
+      continue-on-error: true
+      run: terraform init
+
+    - name: ls all
+      run: ls -la
 
     - name: Terraform Format
       run: terraform fmt -check
