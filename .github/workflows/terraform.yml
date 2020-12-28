@@ -1,0 +1,42 @@
+name: 'Terraform'
+
+on:
+  push:
+    branches:
+    - $default-branch
+  pull_request:
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Render templates
+      run: ./render_tmpl.sh
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 0.14.3
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Format
+      run: terraform fmt -check
+
+    - name: Terraform Plan
+      run: terraform plan
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/$default-branch' && github.event_name == 'push'
+      run: terraform apply -auto-approve
