@@ -18,6 +18,7 @@ module "gke" {
   http_load_balancing        = false
   horizontal_pod_autoscaling = false
   network_policy             = false
+  grant_registry_access      = true
 
   node_pools = [
     {
