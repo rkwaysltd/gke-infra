@@ -5,6 +5,7 @@ module "gke" {
   region                     = var.region
   zones                      = var.zones
   name                       = var.name
+  release_channel            = "REGULAR"
   network                    = "default"
   subnetwork                 = "default"
   ip_range_pods              = ""
