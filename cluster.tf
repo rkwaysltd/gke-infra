@@ -2,8 +2,13 @@ module "gke" {
   source                     = "terraform-google-modules/kubernetes-engine/google"
   version                    = "12.3.0"
   project_id                 = var.project_id
-  region                     = var.region
-  zones                      = var.zones
+  # for development phase
+  regional                   = false
+  region                     = "europe-west2"
+  zones                      = ["europe-west2-b"]
+  # for production phase
+  #region                     = var.region
+  #zones                      = var.zones
   name                       = var.name
   release_channel            = "REGULAR"
   network                    = "default"
