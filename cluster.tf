@@ -20,6 +20,11 @@ module "gke" {
   network_policy             = false
   grant_registry_access      = true
 
+  database_encryption = [{
+    state    = "ENCRYPTED"
+    key_name = google_kms_crypto_key.db.self_link
+  }]
+
   node_pools = [
     {
       name               = "default-node-pool"
