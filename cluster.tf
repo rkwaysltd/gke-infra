@@ -28,6 +28,8 @@ module "gke" {
   maintenance_end_time = "1970-01-01T08:00:00Z"
   maintenance_recurrence = "FREQ=WEEKLY;BYDAY=SU,SA;INTERVAL=1"
 
+  remove_default_node_pool = true
+
   node_pools = [
     {
       name               = "default-node-pool"
