@@ -38,7 +38,7 @@ module "gke" {
       max_count          = var.max_count
       disk_size_gb       = var.disk_size_gb
       disk_type          = "pd-standard"
-      image_type         = "cos_containerd"
+      image_type         = "COS_CONTAINERD"
       auto_repair        = true
       auto_upgrade       = true
       preemptible        = false
