@@ -1,6 +1,5 @@
 module "gke" {
-  source     = "terraform-google-modules/kubernetes-engine/google"
-  version    = "12.3.0"
+  source     = "github.com/rkwaysltd/terraform-google-kubernetes-engine?ref=gke-infra"
   project_id = var.project_id
   # for development phase
   regional = false
