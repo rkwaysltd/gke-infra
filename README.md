@@ -24,7 +24,7 @@ This settings cannot be changed on existing cluster. Full cluster re-creation re
 
     Encrypt Kubernetes secrets with `.../keyRings/<cluster_name>/cryptoKeys/k8s-db` KMS key. Automatic rotation every 30 days but [new key versions are only used on freshly created Secrets](https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets#re-encrypting_your_secrets).
 
-- Encryption at Rest - Node root disks
+- Encryption at Rest - [Node root disks](https://cloud.google.com/kubernetes-engine/docs/how-to/using-cmek#boot-disks)
 
     Node OS/Root disks are encrypted with `.../keyRings/<cluster_name>/cryptoKeys/k8s-root-disk` KMS key. Automatic rotation every 30 days - new key versions are used on freshly created Nodes.
 
