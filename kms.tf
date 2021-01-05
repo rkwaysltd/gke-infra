@@ -17,9 +17,9 @@ resource "google_kms_crypto_key" "db" {
   }
 }
 
-resource "google_kms_key_ring_iam_binding" "key_ring_db" {
-  key_ring_id = google_kms_key_ring.gke.id
-  role        = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+resource "google_kms_crypto_key_iam_binding" "crypto_key_db" {
+  crypto_key_id = google_kms_crypto_key.db.id
+  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
 
   members = [
     "serviceAccount:service-${data.google_project.gke_project.number}@container-engine-robot.iam.gserviceaccount.com",
@@ -38,11 +38,11 @@ resource "google_kms_crypto_key" "root_disk" {
   }
 }
 
-resource "google_kms_key_ring_iam_binding" "key_ring_root_disk" {
-  key_ring_id = google_kms_key_ring.gke.id
-  role        = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+resource "google_kms_crypto_key_iam_binding" "crypto_key_root_disk" {
+  crypto_key_id = google_kms_crypto_key.root_disk.id
+  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
 
   members = [
-    "serviceAccount:service-${data.google_project.gke_project.number}@container-engine-robot.iam.gserviceaccount.com",
+    "serviceAccount:service-${data.google_project.gke_project.number}@compute-system.iam.gserviceaccount.com",
   ]
 }
