@@ -43,6 +43,7 @@ module "gke" {
       auto_upgrade       = true
       preemptible        = false
       initial_node_count = var.initial_node_count
+      boot_disk_kms_key  = google_kms_crypto_key.root_disk.self_link
     },
   ]
 
