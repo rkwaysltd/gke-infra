@@ -144,7 +144,6 @@ This settings cannot be changed on existing cluster. Full cluster re-creation re
     ```sh
     gcloud container clusters list
     gcloud container clusters get-credentials gke-cluster
-    FREQ=WEEKLY;BYDAY=SU,SA;INTERVAL=1
     ```
 
 ## Local machine usage

@@ -24,6 +24,10 @@ module "gke" {
     key_name = google_kms_crypto_key.db.self_link
   }]
 
+  maintenance_start_time = "1970-01-01T02:00:00Z"
+  maintenance_end_time = "1970-01-01T08:00:00Z"
+  maintenance_recurrence = "FREQ=WEEKLY;BYDAY=SU,SA;INTERVAL=1"
+
   node_pools = [
     {
       name               = "default-node-pool"
