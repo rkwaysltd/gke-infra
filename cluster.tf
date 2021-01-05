@@ -1,5 +1,5 @@
 module "gke" {
-  source     = "github.com/rkwaysltd/terraform-google-kubernetes-engine?ref=gke-infra"
+  source     = "github.com/rkwaysltd/terraform-google-kubernetes-engine?ref=gke-infra/modules/beta-public-cluster"
   project_id = var.project_id
   # for development phase
   regional = false
