@@ -28,6 +28,10 @@ This settings cannot be changed on existing cluster. Full cluster re-creation re
 
     Node OS/Root disks are encrypted with `.../keyRings/<cluster_name>/cryptoKeys/k8s-root-disk` KMS key. Automatic rotation every 30 days - new key versions are used on freshly created Nodes.
 
+- Encryption at Rest - [Cluster default Storage Class](https://cloud.google.com/kubernetes-engine/docs/how-to/using-cmek#create_an_encrypted_in)
+
+    Persistent Volumes disks created by PVC in `standard-cmek` Storage Class are encrypted with `.../keyRings/<cluster_name>/cryptoKeys/k8s-sc-standard-cmek-disk` KMS key. Automatic rotation every 30 days - new key versions are used on freshly created PVs.
+
 ## Preflight one-time setup
 
 1. Create master project in [Google Cloud console](https://console.cloud.google.com/cloud-resource-manager). Highly confidential Terraform state will be kept in a GCS bucket in that project.

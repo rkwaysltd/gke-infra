@@ -23,14 +23,14 @@ resource "kubernetes_storage_class" "standard_cmek" {
     }
   }
 
-  storage_provisioner    = "kubernetes.io/gce-pd"
+  storage_provisioner    = "pd.csi.storage.gke.io"
   reclaim_policy         = "Delete"
   allow_volume_expansion = true
-  #volume_binding_mode = "WaitForFirstConsumer"
-  volume_binding_mode = "Immediate"
+  volume_binding_mode    = "WaitForFirstConsumer"
 
   parameters = {
-    type = "pd-standard"
+    type                      = "pd-standard"
+    "disk-encryption-kms-key" = google_kms_crypto_key.sc_standard_cmek_disk.self_link
   }
 
   depends_on = [
