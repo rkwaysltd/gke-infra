@@ -14,3 +14,26 @@ module "gcloud_no_default_standard_storageclass" {
     [module.gke.master_version],
   )
 }
+
+resource "kubernetes_storage_class" "standard_cmek" {
+  metadata {
+    name = "standard-cmek"
+    annotations = {
+      "storageclass.kubernetes.io/is-default-class" = true
+    }
+  }
+
+  storage_provisioner    = "kubernetes.io/gce-pd"
+  reclaim_policy         = "Delete"
+  allow_volume_expansion = true
+  #volume_binding_mode = "WaitForFirstConsumer"
+  volume_binding_mode = "Immediate"
+
+  parameters = {
+    type = "pd-standard"
+  }
+
+  depends_on = [
+    module.gcloud_no_default_standard_storageclass.wait
+  ]
+}
