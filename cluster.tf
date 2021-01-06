@@ -10,6 +10,7 @@ module "gke" {
   #zones                      = var.zones
   name                       = var.name
   release_channel            = "REGULAR"
+  gce_pd_csi_driver          = true
   network                    = "default"
   subnetwork                 = "default"
   ip_range_pods              = ""
