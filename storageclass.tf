@@ -37,3 +37,35 @@ resource "kubernetes_storage_class" "standard_cmek" {
     module.gcloud_no_default_standard_storageclass.wait
   ]
 }
+
+resource "kubernetes_storage_class" "premium_rwo_cmek" {
+  metadata {
+    name = "premium-rwo-cmek"
+  }
+
+  storage_provisioner    = "pd.csi.storage.gke.io"
+  reclaim_policy         = "Delete"
+  allow_volume_expansion = true
+  volume_binding_mode    = "WaitForFirstConsumer"
+
+  parameters = {
+    type                      = "pd-ssd"
+    "disk-encryption-kms-key" = google_kms_crypto_key.sc_storageclass_cmek_disk.self_link
+  }
+}
+
+resource "kubernetes_storage_class" "standard_rwo_cmek" {
+  metadata {
+    name = "standard-rwo-cmek"
+  }
+
+  storage_provisioner    = "pd.csi.storage.gke.io"
+  reclaim_policy         = "Delete"
+  allow_volume_expansion = true
+  volume_binding_mode    = "WaitForFirstConsumer"
+
+  parameters = {
+    type                      = "pd-balanced"
+    "disk-encryption-kms-key" = google_kms_crypto_key.sc_storageclass_cmek_disk.self_link
+  }
+}
