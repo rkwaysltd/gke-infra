@@ -32,6 +32,13 @@ jobs:
         APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
       run: echo "${APPLICATION_CREDENTIALS}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
 
+    - name: Setup gcloud CLI
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        version: '321.0.0'
+        service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        project_id: ${{ secrets.PROJECT_ID }}
+
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
       with:
