@@ -52,9 +52,9 @@ resource "google_kms_crypto_key_iam_binding" "crypto_key_root_disk" {
   ]
 }
 
-# Disk encryption key for PVCs in storageClass "standard-cmek"
-resource "google_kms_crypto_key" "sc_standard_cmek_disk" {
-  name     = "k8s-sc-standard-cmek-disk"
+# Disk encryption key for PVCs in `*-cmek` storage classes
+resource "google_kms_crypto_key" "sc_storageclass_cmek_disk" {
+  name     = "k8s-sc-storageclass-cmek-disk"
   key_ring = google_kms_key_ring.gke.self_link
   # 30 days
   rotation_period = "2592000s"
@@ -64,8 +64,8 @@ resource "google_kms_crypto_key" "sc_standard_cmek_disk" {
   }
 }
 
-resource "google_kms_crypto_key_iam_binding" "crypto_key_sc_standard_cmek_disk" {
-  crypto_key_id = google_kms_crypto_key.sc_standard_cmek_disk.id
+resource "google_kms_crypto_key_iam_binding" "crypto_key_sc_storageclass_cmek_disk" {
+  crypto_key_id = google_kms_crypto_key.sc_storageclass_cmek_disk.id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
 
   members = [

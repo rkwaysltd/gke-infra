@@ -30,7 +30,7 @@ resource "kubernetes_storage_class" "standard_cmek" {
 
   parameters = {
     type                      = "pd-standard"
-    "disk-encryption-kms-key" = google_kms_crypto_key.sc_standard_cmek_disk.self_link
+    "disk-encryption-kms-key" = google_kms_crypto_key.sc_storageclass_cmek_disk.self_link
   }
 
   depends_on = [
