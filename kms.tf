@@ -3,6 +3,11 @@ resource "google_kms_key_ring" "gke" {
   location = var.region
   name     = var.name
   project  = var.project_id
+
+  lifecycle {
+    # KeyRings cannot be destroyed in Google Cloud
+    prevent_destroy = true
+  }
 }
 
 # Database (Secrets) encryption key
