@@ -19,4 +19,9 @@ resource "helm_release" "cert_manager" {
   version    = "v1.1.0"
   namespace  = kubernetes_namespace.cert_manager.metadata[0].name
   skip_crds  = false
+
+  set {
+    name  = "installCRDs"
+    value = "true"
+  }
 }
