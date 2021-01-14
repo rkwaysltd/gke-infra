@@ -42,7 +42,7 @@ module "gke" {
       image_type         = "COS_CONTAINERD"
       auto_repair        = true
       auto_upgrade       = true
-      preemptible        = false
+      preemptible        = true
       initial_node_count = var.initial_node_count
       boot_disk_kms_key  = google_kms_crypto_key.root_disk.self_link
     },
