@@ -15,7 +15,7 @@ module "gke" {
   subnetwork                 = "default"
   ip_range_pods              = ""
   ip_range_services          = ""
-  http_load_balancing        = false
+  http_load_balancing        = true
   horizontal_pod_autoscaling = false
   network_policy             = false
   grant_registry_access      = true
