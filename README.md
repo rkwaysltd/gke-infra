@@ -130,10 +130,7 @@ This settings cannot be changed on existing cluster. Full cluster re-creation re
             --role="roles/compute.securityAdmin"
         gcloud projects add-iam-policy-binding "$PROJECT_ID" \
             --member="serviceAccount:terraform@$PROJECT_ID.iam.gserviceaccount.com" \
-            --role="roles/container.clusterAdmin"
-        gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-            --member="serviceAccount:terraform@$PROJECT_ID.iam.gserviceaccount.com" \
-            --role="roles/container.developer"
+            --role="roles/container.admin"
         gcloud projects add-iam-policy-binding "$PROJECT_ID" \
             --member="serviceAccount:terraform@$PROJECT_ID.iam.gserviceaccount.com" \
             --role="roles/iam.serviceAccountAdmin"
