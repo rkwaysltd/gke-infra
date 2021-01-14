@@ -17,7 +17,7 @@ module "gke" {
   ip_range_services          = ""
   http_load_balancing        = true
   horizontal_pod_autoscaling = false
-  network_policy             = false
+  network_policy             = true
   grant_registry_access      = true
 
   database_encryption = [{
