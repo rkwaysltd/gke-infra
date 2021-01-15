@@ -10,7 +10,7 @@
 - __Not private-cluster__. While good for security it adds a huge amount of complexity to cluster infrastructure.
 - Google Cloud Storage in the cluster project should __never be used for highly confidential information__. It's primary purpose is to hold the Container Registry and the cluster nodes have read-only access to all buckets. Create GCS bucket for confidential data in separate project.
 - Disabled [Config Connector](https://cloud.google.com/config-connector/docs/overview) as preferred way to manage Google Cloud resources is via this Terraform project.
-- [Workload identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) enabled as it can be used to controll access to Google Cloud services per-Pod Service Account ([Terraform setup example](https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/tree/master/examples/workload_identity)).
+- [Workload identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) enabled as it can be used to control access to Google Cloud services per-Pod Service Account ([Terraform setup example](https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/tree/master/examples/workload_identity)).
 - [Compute Engine persistent disk CSI Driver](https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/gce-pd-csi-driver) enabled as it's required for customer-managed encryption keys in `storageclass-cmek` Storage Class.
 - Default Storage Class uses `pd-standard` [disk type](https://cloud.google.com/compute/docs/disks).
 
@@ -33,6 +33,8 @@ This settings cannot be changed on existing cluster. Full cluster re-creation re
 - Encryption at Rest - [Cluster Storage Classes](https://cloud.google.com/kubernetes-engine/docs/how-to/using-cmek#create_an_encrypted_in)
 
     Persistent Volumes disks created by PVC in any `*-cmek` Storage Class are encrypted with `.../keyRings/<cluster_name>/cryptoKeys/k8s-sc-storageclass-cmek-disk` KMS key. Automatic rotation every 30 days - new key versions are used on freshly created PVs.
+
+- Due to [various speculative execution attacks](https://en.wikipedia.org/wiki/Transient_execution_CPU_vulnerability) it's recommended to use non shared-core [machine type](https://cloud.google.com/compute/docs/machine-types#machine_types) in node pools.
 
 ## Preflight one-time setup
 
