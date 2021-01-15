@@ -13,6 +13,7 @@
 - [Workload identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) enabled as it can be used to control access to Google Cloud services per-Pod Service Account ([Terraform setup example](https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/tree/master/examples/workload_identity)).
 - [Compute Engine persistent disk CSI Driver](https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/gce-pd-csi-driver) enabled as it's required for customer-managed encryption keys in `storageclass-cmek` Storage Class.
 - Default Storage Class uses `pd-standard` [disk type](https://cloud.google.com/compute/docs/disks).
+- [Network Policy](https://cloud.google.com/kubernetes-engine/docs/concepts/network-overview#limit-connectivity-pods) enabled in cluster as a way to secure apps environments from each other.
 
 ## Changes to be made before going into production
 
@@ -35,6 +36,10 @@ This settings cannot be changed on existing cluster. Full cluster re-creation re
     Persistent Volumes disks created by PVC in any `*-cmek` Storage Class are encrypted with `.../keyRings/<cluster_name>/cryptoKeys/k8s-sc-storageclass-cmek-disk` KMS key. Automatic rotation every 30 days - new key versions are used on freshly created PVs.
 
 - Due to [various speculative execution attacks](https://en.wikipedia.org/wiki/Transient_execution_CPU_vulnerability) it's recommended to use non shared-core [machine type](https://cloud.google.com/compute/docs/machine-types#machine_types) in node pools.
+
+## Minimal hardware requirements
+
+The cluster must have at least 2 nodes of type e2-medium or higher. The recommended minimum size cluster to run network policy enforcement is 3 e2-medium instances.
 
 ## Preflight one-time setup
 
