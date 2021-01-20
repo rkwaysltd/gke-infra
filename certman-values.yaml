@@ -4,7 +4,7 @@ resources:
     memory: 64Mi
   limits:
     cpu: 100m
-    memory: 64Mi
+    memory: 128Mi
 
 webhook:
   resources:
@@ -13,7 +13,7 @@ webhook:
       memory: 64Mi
     limits:
       cpu: 100m
-      memory: 64Mi
+      memory: 128Mi
 
 cainjector:
   resources:
@@ -22,4 +22,4 @@ cainjector:
       memory: 64Mi
     limits:
       cpu: 100m
-      memory: 64Mi
+      memory: 128Mi
