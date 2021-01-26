@@ -107,7 +107,9 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
             compute.googleapis.com \
             container.googleapis.com \
             cloudresourcemanager.googleapis.com \
-            cloudkms.googleapis.com
+            cloudkms.googleapis.com \
+            logging.googleapis.com \
+            monitoring.googleapis.com
         ```
 
     - create Terraform service account
