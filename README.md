@@ -152,6 +152,9 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
         gcloud projects add-iam-policy-binding "$PROJECT_ID" \
             --member="serviceAccount:terraform@$PROJECT_ID.iam.gserviceaccount.com" \
             --role="roles/cloudkms.admin"
+        gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+            --member="serviceAccount:terraform@$PROJECT_ID.iam.gserviceaccount.com" \
+            --role="roles/logging.configWriter"
         ```
 
 ## Scratchpad.
