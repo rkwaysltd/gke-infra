@@ -42,3 +42,8 @@ variable "initial_node_count" {
   type        = number
   description = "The number of nodes to create in this cluster's default node pool."
 }
+
+variable "logs_retention_days" {
+  type        = number
+  description = "Logs will be retained by default for this amount of time, after which they will automatically be deleted. The minimum retention period is 1 day."
+}
