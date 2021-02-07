@@ -17,7 +17,6 @@ jobs:
 
     env:
       TF_STATE_BUCKET: ${{ secrets.TF_STATE_BUCKET }}
-      GOOGLE_APPLICATION_CREDENTIALS: /tmp/account.json
       VARIABLES: variables.dev.tfvars.json
 
     steps:
@@ -34,16 +33,11 @@ jobs:
     - name: Render templates
       run: ./render_tmpl.sh
 
-    - name: Create credentials file
-      env:
-        APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-      run: echo "${APPLICATION_CREDENTIALS}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
-
     - name: Setup gcloud CLI
       uses: google-github-actions/setup-gcloud@master
       with:
         version: '321.0.0'
-        service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        service_account_key: ${{ secrets.GOOGLE_CREDENTIALS_DEV }}
         project_id: ${{ steps.preflight.outputs.project_id }}
 
     - name: Setup Terraform
@@ -81,6 +75,7 @@ jobs:
       env:
         GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
         GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_DEV }}
       run: |
         # disable command workflow processing
         echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
@@ -118,5 +113,6 @@ jobs:
 #      env:
 #        GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
 #        GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
+#        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_DEV }}
 #      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 #      run: terraform apply -var-file="$VARIABLES" -auto-approve

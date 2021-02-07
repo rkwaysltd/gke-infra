@@ -102,9 +102,9 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
 
     - run `./preflight/setup.sh` script
 
-    - FIXME: later docs needs update!
+    - copy content of `./terraform-sa-key-dev.json` file into `GOOGLE_CREDENTIALS_DEV` GitHub project secret
 
-    - copy content of `./terraform-sa-key.json` file content into `GOOGLE_APPLICATION_CREDENTIALS` GitHub project secret
+    - copy content of `./terraform-sa-key-prod.json` file into `GOOGLE_CREDENTIALS_PROD` GitHub project secret
 
 ## Scratchpad.
 
