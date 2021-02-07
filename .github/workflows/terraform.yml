@@ -18,7 +18,7 @@ jobs:
     env:
       TF_STATE_BUCKET: ${{ secrets.TF_STATE_BUCKET }}
       GOOGLE_APPLICATION_CREDENTIALS: /tmp/account.json
-      VARIABLES: variables.auto.tfvars.json
+      VARIABLES: variables.dev.tfvars.json
 
     steps:
     - name: Checkout

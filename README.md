@@ -89,76 +89,22 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
 
 1. Create two projects in [Google Cloud console](https://console.cloud.google.com/cloud-resource-manager).
 
+    - edit Terraform variables in `variables.dev.tfvars.json` and `variables.prod.tfvars.json` files:
+
+        - Google Cloud project names in the `project_id` field
+        - Kubernetes cluster names in the `name` field
+
+    - run login script with your Google Cloud project owner account id as argument, copy displayed links into browser and follow instructions:
+
+        ```bash
+        ./preflight/login.sh owner.email.account@gmail.com
+        ```
+
+    - run `./preflight/setup.sh` script
+
     - FIXME: later docs needs update!
 
-    - copy project name into `PROJECT_ID` GitHub project secret
-
-    - configure local `gcloud`
-
-        ```sh
-        PROJECT_ID="<project id>"
-        gcloud config configurations create gke-infra
-        gcloud config set account your.login@gmail.com
-        gcloud config set project $PROJECT_ID
-        gcloud auth login
-        ```
-
-    - enable Google Cloud APIs
-
-        ```sh
-        gcloud services enable \
-            compute.googleapis.com \
-            container.googleapis.com \
-            cloudresourcemanager.googleapis.com \
-            cloudkms.googleapis.com \
-            logging.googleapis.com \
-            monitoring.googleapis.com
-        ```
-
-    - create Terraform service account
-
-        ```sh
-        PROJECT_ID="<project id>"
-        gcloud iam service-accounts create terraform \
-            --project=$PROJECT_ID \
-            --description="Terraform SA" \
-            --display-name="terraform"
-        gcloud iam service-accounts keys create ./terraform-sa-key.json \
-            --project=$PROJECT_ID \
-            --iam-account="terraform@$PROJECT_ID.iam.gserviceaccount.com"
-        ```
-
     - copy content of `./terraform-sa-key.json` file content into `GOOGLE_APPLICATION_CREDENTIALS` GitHub project secret
-
-    - grant [necessary permissions](https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/tree/v12.3.0#configure-a-service-account)
-
-        ```sh
-        PROJECT_ID="<project id>"
-        gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-            --member="serviceAccount:terraform@$PROJECT_ID.iam.gserviceaccount.com" \
-            --role="roles/compute.viewer"
-        gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-            --member="serviceAccount:terraform@$PROJECT_ID.iam.gserviceaccount.com" \
-            --role="roles/compute.securityAdmin"
-        gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-            --member="serviceAccount:terraform@$PROJECT_ID.iam.gserviceaccount.com" \
-            --role="roles/container.admin"
-        gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-            --member="serviceAccount:terraform@$PROJECT_ID.iam.gserviceaccount.com" \
-            --role="roles/iam.serviceAccountAdmin"
-        gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-            --member="serviceAccount:terraform@$PROJECT_ID.iam.gserviceaccount.com" \
-            --role="roles/iam.serviceAccountUser"
-        gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-            --member="serviceAccount:terraform@$PROJECT_ID.iam.gserviceaccount.com" \
-            --role="roles/resourcemanager.projectIamAdmin"
-        gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-            --member="serviceAccount:terraform@$PROJECT_ID.iam.gserviceaccount.com" \
-            --role="roles/cloudkms.admin"
-        gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-            --member="serviceAccount:terraform@$PROJECT_ID.iam.gserviceaccount.com" \
-            --role="roles/logging.configWriter"
-        ```
 
 ## Scratchpad.
 
@@ -181,5 +127,6 @@ It should be possible to e.g. see output from `terraform plan` command.
 
 ```sh
 gcloud config configurations activate default
-gcloud config configurations delete gke-infra
+gcloud config configurations delete gke-infra-dev
+gcloud config configurations delete gke-infra-prod
 ```
