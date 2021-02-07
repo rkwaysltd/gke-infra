@@ -4,6 +4,7 @@
 
 - Separate project for Terraform state (contains cluster credentials).
 - Terraform state bucket located in London without geo-redundancy.
+- Two clusters - first for development and second for production deployments.
 - _Regular_ [release channel](https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels).
 - _Zonal_ cluster [location type](https://cloud.google.com/kubernetes-engine/docs/concepts/types-of-clusters) while developing infrastructure for cluster.
 - _Default_ network/subnet for cluster as the whole project is dedicated for the cluster. Please [see recommendations](https://cloud.google.com/vpc/docs/vpc#default-network).
@@ -86,7 +87,9 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
 
     - copy generated key into `GOOGLE_ENCRYPTION_KEY` GitHub secret
 
-1. Create project in [Google Cloud console](https://console.cloud.google.com/cloud-resource-manager).
+1. Create two projects in [Google Cloud console](https://console.cloud.google.com/cloud-resource-manager).
+
+    - FIXME: later docs needs update!
 
     - copy project name into `PROJECT_ID` GitHub project secret
 

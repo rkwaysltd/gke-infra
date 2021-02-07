@@ -17,12 +17,19 @@ jobs:
 
     env:
       TF_STATE_BUCKET: ${{ secrets.TF_STATE_BUCKET }}
-      PROJECT_ID: ${{ secrets.PROJECT_ID }}
       GOOGLE_APPLICATION_CREDENTIALS: /tmp/account.json
+      VARIABLES: variables.auto.tfvars.json
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
+    - name: Preflight
+      id: preflight
+      run: |
+        set -eu
+        echo "PROJECT_ID=$(jq -re .project_id < $VARIABLES)" >> $GITHUB_ENV
+        echo "::set-output name=project_id::$(jq -re .project_id < $VARIABLES)"
 
     - name: Render templates
       run: ./render_tmpl.sh
@@ -37,7 +44,7 @@ jobs:
       with:
         version: '321.0.0'
         service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-        project_id: ${{ secrets.PROJECT_ID }}
+        project_id: ${{ steps.preflight.outputs.project_id }}
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
