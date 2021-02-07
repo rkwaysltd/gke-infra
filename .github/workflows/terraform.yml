@@ -84,7 +84,7 @@ jobs:
       run: |
         # disable command workflow processing
         echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
-        terraform plan -no-color
+        terraform plan -var-file="$VARIABLES" -no-color
 
     - uses: actions/github-script@0.9.0
       if: github.event_name == 'pull_request'
@@ -119,4 +119,4 @@ jobs:
 #        GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
 #        GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
 #      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-#      run: terraform apply -auto-approve
+#      run: terraform apply -var-file="$VARIABLES" -auto-approve
