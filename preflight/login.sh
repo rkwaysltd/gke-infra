@@ -3,6 +3,7 @@ set -eu
 
 D=$(dirname $0)
 OWNER=${1:?run as $0 <owner_email_address>}
+GCLOUD_CONFIG=$(gcloud config configurations list --format=json | jq -re '.[] | select(.is_active == true) | .name')
 
 for t in dev prod; do
     PROJECT_ID="$(jq -re .project_id < "$D/../variables.${t}.tfvars.json")"
@@ -12,5 +13,5 @@ for t in dev prod; do
     gcloud auth login --no-launch-browser
 done
 
-echo
+gcloud config configurations activate "$GCLOUD_CONFIG"
 echo Done.

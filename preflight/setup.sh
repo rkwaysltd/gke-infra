@@ -2,6 +2,7 @@
 set -eu
 
 D=$(dirname $0)
+GCLOUD_CONFIG=$(gcloud config configurations list --format=json | jq -re '.[] | select(.is_active == true) | .name')
 
 for t in dev prod; do
     vars="$D/../variables.${t}.tfvars.json"
@@ -42,3 +43,5 @@ for t in dev prod; do
             --role="$role"
     done
 done
+
+gcloud config configurations activate "$GCLOUD_CONFIG"
