@@ -16,6 +16,7 @@ jobs:
         shell: bash
 
     env:
+      TF_IN_AUTOMATION: 1
       TF_STATE_BUCKET: ${{ secrets.TF_STATE_BUCKET }}
       VARIABLES: variables.dev.tfvars.json
       TF_WORKSPACE: dev
