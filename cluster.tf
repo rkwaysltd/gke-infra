@@ -91,4 +91,10 @@ module "gke" {
       "default-node-pool",
     ]
   }
+
+  # Explicit dependency on KMS key permissions
+  depends_on = [
+    google_kms_crypto_key_iam_binding.crypto_key_db,
+    google_kms_crypto_key_iam_binding.crypto_key_root_disk,
+  ]
 }
