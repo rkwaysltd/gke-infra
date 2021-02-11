@@ -111,11 +111,11 @@ jobs:
             body: output
           })
 
-#    - name: Terraform Apply
-#      id: apply
-#      env:
-#        GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
-#        GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
-#        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_DEV }}
-#      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-#      run: terraform apply -input=false -var-file="$VARIABLES" -auto-approve tfplan
+    - name: Terraform Apply
+      id: apply
+      env:
+        GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
+        GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_DEV }}
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply -input=false tfplan
