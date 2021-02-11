@@ -17,6 +17,11 @@ jobs:
           tf_workspace: dev
           tf_variables: "variables.dev.tfvars.json"
           tf_credentials: "GOOGLE_CREDENTIALS_DEV"
+        # prod cluster
+        - name: Production
+          tf_workspace: prod
+          tf_variables: "variables.prod.tfvars.json"
+          tf_credentials: "GOOGLE_CREDENTIALS_PROD"
     name: "Terraform - ${{ matrix.name }} "
 
     defaults:
