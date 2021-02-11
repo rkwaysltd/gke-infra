@@ -120,9 +120,9 @@ Issuing commands from local machine should only be considered in the cluster dev
 - update `./secrets` file based on `./secrets.example`
 - run `set -a; . .secrets; set +a` to set shell variables
 - run `PROJECT_ID=dev ./render_tmpl.sh` script
-- run `terraform init`
+- run `TF_WORKSPACE=dev terraform init`
 
-It should be possible to e.g. see output from `terraform plan` command.
+It should be possible to e.g. see output from `TF_WORKSPACE=dev terraform plan -var-file=./variables.dev.tfvars.json` command.
 
 ## Local machine (gcloud) cleanup
 
