@@ -18,6 +18,7 @@ jobs:
     env:
       TF_STATE_BUCKET: ${{ secrets.TF_STATE_BUCKET }}
       VARIABLES: variables.dev.tfvars.json
+      TF_WORKSPACE: dev
 
     steps:
     - name: Checkout
@@ -69,6 +70,19 @@ jobs:
         # disable command workflow processing
         echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
         terraform validate -no-color
+
+    - name: Terraform Workspace
+      env:
+        GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
+        GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_DEV }}
+      run: |
+        # disable command workflow processing
+        echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
+        if ! terraform workspace list | grep -qw $TF_WORKSPACE; then
+          terraform workspace new $WORKSPACE
+        fi
+        terraform workspace select $WORKSPACE
 
     - name: Terraform Plan
       id: plan
