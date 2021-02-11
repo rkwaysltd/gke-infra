@@ -122,7 +122,7 @@ Issuing commands from local machine should only be considered in the cluster dev
 - run `PROJECT_ID=dev ./render_tmpl.sh` script
 - run `TF_WORKSPACE=dev terraform init`
 
-It should be possible to e.g. see output from `TF_WORKSPACE=dev terraform plan -var-file=./variables.dev.tfvars.json` command.
+It should be possible to e.g. see output from `GOOGLE_CREDENTIALS="$GOOGLE_CREDENTIALS_DEV" TF_WORKSPACE=dev terraform plan -var-file=./variables.dev.tfvars.json` command.
 
 ## Local machine (gcloud) cleanup
 
