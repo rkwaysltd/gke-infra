@@ -119,8 +119,8 @@ Issuing commands from local machine should only be considered in the cluster dev
 
 - update `./secrets` file based on `./secrets.example`
 - run `set -a; . .secrets; set +a` to set shell variables
-- run `PROJECT_ID=dev ./render_tmpl.sh` script
-- run `TF_WORKSPACE=dev terraform init`
+- run `PROJECT_ID="$(jq -re .project_id < ./variables.dev.tfvars.json)" ./render_tmpl.sh` script
+- run `TF_WORKSPACE= terraform init`
 
 It should be possible to e.g. see output from `GOOGLE_CREDENTIALS="$GOOGLE_CREDENTIALS_DEV" TF_WORKSPACE=dev terraform plan -var-file=./variables.dev.tfvars.json` command.
 
