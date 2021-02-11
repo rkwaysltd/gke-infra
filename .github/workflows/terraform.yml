@@ -63,7 +63,8 @@ jobs:
       run: |
         # disable command workflow processing
         echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
-        terraform init -input=false
+        # workaround for https://github.com/hashicorp/terraform/issues/21393
+        TF_WORKSPACE= terraform init -input=false < /dev/null
 
     - name: Terraform Validate
       id: validate
