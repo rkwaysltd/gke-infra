@@ -118,7 +118,8 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
 Issuing commands from local machine should only be considered in the cluster development stage and never to production cluster.
 
 - update `./secrets` file based on `./secrets.example`
-- run `./render_tmpl.sh` script
+- run `set -a; . .secrets; set +a` to set shell variables
+- run `PROJECT_ID=dev ./render_tmpl.sh` script
 - run `terraform init`
 
 It should be possible to e.g. see output from `terraform plan` command.
