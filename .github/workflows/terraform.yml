@@ -16,7 +16,7 @@ jobs:
         - name: Development
           tf_workspace: dev
           tf_variables: "variables.dev.tfvars.json"
-          tf_credentials: ${{ secrets.GOOGLE_CREDENTIALS_DEV }}
+          tf_credentials: "GOOGLE_CREDENTIALS_DEV"
     name: "Terraform - ${{ matrix.name }} "
 
     defaults:
@@ -47,7 +47,7 @@ jobs:
       uses: google-github-actions/setup-gcloud@master
       with:
         version: '321.0.0'
-        service_account_key: ${{ matrix.tf_credentials }}
+        service_account_key: ${{ secrets[matrix.tf_credentials] }}
         project_id: ${{ steps.preflight.outputs.project_id }}
 
     - name: Setup Terraform
@@ -86,7 +86,7 @@ jobs:
       env:
         GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
         GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
-        GOOGLE_CREDENTIALS: ${{ matrix.tf_credentials }}
+        GOOGLE_CREDENTIALS: ${{ secrets[matrix.tf_credentials] }}
       run: |
         # disable command workflow processing
         echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
@@ -124,6 +124,6 @@ jobs:
       env:
         GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
         GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
-        GOOGLE_CREDENTIALS: ${{ matrix.tf_credentials }}
+        GOOGLE_CREDENTIALS: ${{ secrets[matrix.tf_credentials] }}
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -input=false tfplan
