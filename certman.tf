@@ -72,7 +72,7 @@ resource "kubernetes_manifest" "cert_manager_cf_issuer" {
             }
             selector = {
               dnsZones = [
-                for domain in split(",", var.cloudflare_domain_list):
+                for domain in split(",", var.cloudflare_domain_list) :
                 trimspace(domain)
               ]
             }
