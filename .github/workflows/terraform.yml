@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - main
+    - main-prod
   pull_request:
 
 jobs:
@@ -38,9 +39,11 @@ jobs:
 
     steps:
     - name: Checkout
+      if: ($github.event_name == 'pull_request' && github.base_ref == "refs/heads/${{ matrix.branch }}") || (github.event_name == 'push' && github.ref == "refs/heads/${{ matrix.branch }}")
       uses: actions/checkout@v2
 
     - name: Preflight
+      if: ($github.event_name == 'pull_request' && github.base_ref == "refs/heads/${{ matrix.branch }}") || (github.event_name == 'push' && github.ref == "refs/heads/${{ matrix.branch }}")
       id: preflight
       run: |
         set -eu
@@ -48,9 +51,11 @@ jobs:
         echo "::set-output name=project_id::$(jq -re .project_id < $TF_VARIABLES)"
 
     - name: Render templates
+      if: ($github.event_name == 'pull_request' && github.base_ref == "refs/heads/${{ matrix.branch }}") || (github.event_name == 'push' && github.ref == "refs/heads/${{ matrix.branch }}")
       run: ./render_tmpl.sh
 
     - name: Setup gcloud CLI
+      if: ($github.event_name == 'pull_request' && github.base_ref == "refs/heads/${{ matrix.branch }}") || (github.event_name == 'push' && github.ref == "refs/heads/${{ matrix.branch }}")
       uses: google-github-actions/setup-gcloud@master
       with:
         version: '321.0.0'
@@ -58,11 +63,13 @@ jobs:
         project_id: ${{ steps.preflight.outputs.project_id }}
 
     - name: Setup Terraform
+      if: ($github.event_name == 'pull_request' && github.base_ref == "refs/heads/${{ matrix.branch }}") || (github.event_name == 'push' && github.ref == "refs/heads/${{ matrix.branch }}")
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: 0.14.3
 
     - name: Terraform Format
+      if: ($github.event_name == 'pull_request' && github.base_ref == "refs/heads/${{ matrix.branch }}") || (github.event_name == 'push' && github.ref == "refs/heads/${{ matrix.branch }}")
       id: fmt
       run: |
         # disable command workflow processing
@@ -71,6 +78,7 @@ jobs:
       continue-on-error: true
 
     - name: Terraform Init
+      if: ($github.event_name == 'pull_request' && github.base_ref == "refs/heads/${{ matrix.branch }}") || (github.event_name == 'push' && github.ref == "refs/heads/${{ matrix.branch }}")
       id: init
       env:
         GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
@@ -82,6 +90,7 @@ jobs:
         TF_WORKSPACE= terraform init -input=false < /dev/null
 
     - name: Terraform Validate
+      if: ($github.event_name == 'pull_request' && github.base_ref == "refs/heads/${{ matrix.branch }}") || (github.event_name == 'push' && github.ref == "refs/heads/${{ matrix.branch }}")
       id: validate
       run: |
         # disable command workflow processing
@@ -89,6 +98,7 @@ jobs:
         terraform validate -no-color
 
     - name: Terraform Plan
+      if: ($github.event_name == 'pull_request' && github.base_ref == "refs/heads/${{ matrix.branch }}") || (github.event_name == 'push' && github.ref == "refs/heads/${{ matrix.branch }}")
       id: plan
       env:
         GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
