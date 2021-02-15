@@ -122,6 +122,7 @@ jobs:
         GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
         GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
         GOOGLE_CREDENTIALS: ${{ secrets[matrix.tf_credentials] }}
+        TF_VAR_cloudflare_api_token: FIXME
       run: |
         # disable command workflow processing
         echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
