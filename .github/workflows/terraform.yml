@@ -136,7 +136,7 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const output = `Cluster ☸️ \`${{ matrix.name }}\`
+          const output = `#### Cluster ☸️ \`${{ matrix.name }}\`
 
           #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
           #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
