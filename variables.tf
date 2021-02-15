@@ -47,3 +47,27 @@ variable "logs_retention_days" {
   type        = number
   description = "Logs will be retained by default for this amount of time, after which they will automatically be deleted. The minimum retention period is 1 day."
 }
+
+variable "letsencrypt_email" {
+  type        = string
+  description = "Let's Encrypt will use this to contact you about expiring certificates, and issues related to your account."
+  default     = ""
+}
+
+variable "cloudflare_api_token" {
+  type        = string
+  description = "Cloudflare API token for cert-manager"
+  default     = ""
+}
+
+variable "cloudflare_api_email" {
+  type        = string
+  description = "Cloudflare API account for cert-manager"
+  default     = ""
+}
+
+variable "cloudflare_domain_list" {
+  type        = string
+  description = "Comma separated list of domains for Cloudflare API token to manage."
+  default     = ""
+}
