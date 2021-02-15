@@ -100,8 +100,9 @@ jobs:
         echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
         terraform plan -out=tfplan -input=false -var-file="$TF_VARIABLES" -no-color
 
-    - uses: actions/github-script@0.9.0
-      if: github.event_name == 'pull_request' && github.base_ref == "refs/heads/${{ matrix.branch }}"
+    - name: Append plan to PR
+      uses: actions/github-script@0.9.0
+      if: github.event_name == 'pull_request'
       env:
         PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
       with:
