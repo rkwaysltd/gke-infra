@@ -25,7 +25,7 @@ jobs:
           tf_workspace: prod
           tf_variables: "variables.prod.tfvars.json"
           tf_credentials: "GOOGLE_CREDENTIALS_PROD"
-    name: "Terraform - ${{ matrix.name }} "
+    name: "Terraform - ${{ matrix.name }}"
 
     defaults:
       run:
@@ -136,7 +136,9 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          const output = `Cluster ☸️ \`${{ matrix.name }}\`
+
+          #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
           #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
           #### Terraform Validation 🤖${{ steps.validate.outputs.stdout }}
           #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
