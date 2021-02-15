@@ -41,13 +41,13 @@ jobs:
     - name: Checkout
       if: |
         (github.event_name == 'push' && github.ref == format('refs/heads/{0}', matrix.branch)) ||
-        (github.event_name == 'pull_request' && github.event.pull_request.base.ref == format('refs/heads/{0}', matrix.branch))
+        (github.event_name == 'pull_request' && github.base_ref == format('refs/heads/{0}', matrix.branch))
       uses: actions/checkout@v2
 
     - name: Preflight
       if: |
         (github.event_name == 'push' && github.ref == format('refs/heads/{0}', matrix.branch)) ||
-        (github.event_name == 'pull_request' && github.event.pull_request.base.ref == format('refs/heads/{0}', matrix.branch))
+        (github.event_name == 'pull_request' && github.base_ref == format('refs/heads/{0}', matrix.branch))
       id: preflight
       run: |
         set -eu
@@ -57,13 +57,13 @@ jobs:
     - name: Render templates
       if: |
         (github.event_name == 'push' && github.ref == format('refs/heads/{0}', matrix.branch)) ||
-        (github.event_name == 'pull_request' && github.event.pull_request.base.ref == format('refs/heads/{0}', matrix.branch))
+        (github.event_name == 'pull_request' && github.base_ref == format('refs/heads/{0}', matrix.branch))
       run: ./render_tmpl.sh
 
     - name: Setup gcloud CLI
       if: |
         (github.event_name == 'push' && github.ref == format('refs/heads/{0}', matrix.branch)) ||
-        (github.event_name == 'pull_request' && github.event.pull_request.base.ref == format('refs/heads/{0}', matrix.branch))
+        (github.event_name == 'pull_request' && github.base_ref == format('refs/heads/{0}', matrix.branch))
       uses: google-github-actions/setup-gcloud@master
       with:
         version: '321.0.0'
@@ -73,7 +73,7 @@ jobs:
     - name: Setup Terraform
       if: |
         (github.event_name == 'push' && github.ref == format('refs/heads/{0}', matrix.branch)) ||
-        (github.event_name == 'pull_request' && github.event.pull_request.base.ref == format('refs/heads/{0}', matrix.branch))
+        (github.event_name == 'pull_request' && github.base_ref == format('refs/heads/{0}', matrix.branch))
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: 0.14.3
@@ -81,7 +81,7 @@ jobs:
     - name: Terraform Format
       if: |
         (github.event_name == 'push' && github.ref == format('refs/heads/{0}', matrix.branch)) ||
-        (github.event_name == 'pull_request' && github.event.pull_request.base.ref == format('refs/heads/{0}', matrix.branch))
+        (github.event_name == 'pull_request' && github.base_ref == format('refs/heads/{0}', matrix.branch))
       id: fmt
       run: |
         # disable command workflow processing
@@ -92,7 +92,7 @@ jobs:
     - name: Terraform Init
       if: |
         (github.event_name == 'push' && github.ref == format('refs/heads/{0}', matrix.branch)) ||
-        (github.event_name == 'pull_request' && github.event.pull_request.base.ref == format('refs/heads/{0}', matrix.branch))
+        (github.event_name == 'pull_request' && github.base_ref == format('refs/heads/{0}', matrix.branch))
       id: init
       env:
         GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
@@ -106,7 +106,7 @@ jobs:
     - name: Terraform Validate
       if: |
         (github.event_name == 'push' && github.ref == format('refs/heads/{0}', matrix.branch)) ||
-        (github.event_name == 'pull_request' && github.event.pull_request.base.ref == format('refs/heads/{0}', matrix.branch))
+        (github.event_name == 'pull_request' && github.base_ref == format('refs/heads/{0}', matrix.branch))
       id: validate
       run: |
         # disable command workflow processing
@@ -116,7 +116,7 @@ jobs:
     - name: Terraform Plan
       if: |
         (github.event_name == 'push' && github.ref == format('refs/heads/{0}', matrix.branch)) ||
-        (github.event_name == 'pull_request' && github.event.pull_request.base.ref == format('refs/heads/{0}', matrix.branch))
+        (github.event_name == 'pull_request' && github.base_ref == format('refs/heads/{0}', matrix.branch))
       id: plan
       env:
         GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
@@ -129,7 +129,7 @@ jobs:
 
     - name: Append plan to PR
       uses: actions/github-script@0.9.0
-      if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == format('refs/heads/{0}', matrix.branch)
+      if: github.event_name == 'pull_request' && github.base_ref == format('refs/heads/{0}', matrix.branch)
       env:
         PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
       with:
