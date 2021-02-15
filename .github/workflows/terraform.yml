@@ -134,5 +134,5 @@ jobs:
         GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
         GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
         GOOGLE_CREDENTIALS: ${{ secrets[matrix.tf_credentials] }}
-      if: github.event_name == 'push' && github.ref == "refs/heads/${{ matrix.branch }}"
+      if: github.event_name == 'push' && github.ref == format('refs/heads/{0}', matrix.branch)
       run: terraform apply -input=false tfplan
