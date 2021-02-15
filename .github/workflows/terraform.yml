@@ -54,16 +54,6 @@ jobs:
         echo "PROJECT_ID=$(jq -re .project_id < $TF_VARIABLES)" >> $GITHUB_ENV
         echo "::set-output name=project_id::$(jq -re .project_id < $TF_VARIABLES)"
 
-    - name: Test
-      env:
-        TEST1: ${{ github.event_name }}
-        TEST2: ${{ github.event.pull_request.base.ref }}
-        TEST3: ${{ github.base_ref }}
-      run: |
-        echo $TEST1
-        echo $TEST2
-        echo $TEST3
-
     - name: Render templates
       if: |
         (github.event_name == 'push' && github.ref == format('refs/heads/{0}', matrix.branch)) ||
