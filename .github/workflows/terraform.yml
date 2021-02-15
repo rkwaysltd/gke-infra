@@ -14,11 +14,13 @@ jobs:
         include:
         # dev cluster
         - name: Development
+          branch: main
           tf_workspace: dev
           tf_variables: "variables.dev.tfvars.json"
           tf_credentials: "GOOGLE_CREDENTIALS_DEV"
         # prod cluster
         - name: Production
+          branch: main-prod
           tf_workspace: prod
           tf_variables: "variables.prod.tfvars.json"
           tf_credentials: "GOOGLE_CREDENTIALS_PROD"
@@ -98,7 +100,7 @@ jobs:
         terraform plan -out=tfplan -input=false -var-file="$TF_VARIABLES" -no-color
 
     - uses: actions/github-script@0.9.0
-      if: github.event_name == 'pull_request'
+      if: github.event_name == 'pull_request' && github.base_ref == "refs/heads/${{ matrix.branch }}"
       env:
         PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
       with:
@@ -130,5 +132,5 @@ jobs:
         GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
         GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
         GOOGLE_CREDENTIALS: ${{ secrets[matrix.tf_credentials] }}
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      if: github.event_name == 'push' && github.ref == "refs/heads/${{ matrix.branch }}"
       run: terraform apply -input=false tfplan

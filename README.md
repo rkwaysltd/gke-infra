@@ -5,6 +5,8 @@
 - Separate project for Terraform state (contains cluster credentials).
 - Terraform state bucket located in London without geo-redundancy.
 - Two clusters - first for development and second for production deployments.
+- Terraform `plan` stored as comment on PR issues.
+- Terraform execute `apply` command on push to `main` and `main-prod` branches.
 - _Regular_ [release channel](https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels).
 - _Zonal_ cluster [location type](https://cloud.google.com/kubernetes-engine/docs/concepts/types-of-clusters) while developing infrastructure for cluster.
 - _Default_ network/subnet for cluster as the whole project is dedicated for the cluster. Please [see recommendations](https://cloud.google.com/vpc/docs/vpc#default-network).
@@ -43,6 +45,8 @@ This settings cannot be changed on existing cluster. Full cluster re-creation re
 The cluster must have at least 2 nodes of type e2-medium or higher. The recommended minimum size cluster to run network policy enforcement is 3 e2-medium instances.
 
 ## Preflight one-time setup
+
+1. Fork this project on Github, set branch `main-prod` as protected.
 
 1. Create master project in [Google Cloud console](https://console.cloud.google.com/cloud-resource-manager). Highly confidential Terraform state will be kept in a GCS bucket in that project.
 
