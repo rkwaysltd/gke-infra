@@ -19,12 +19,14 @@ jobs:
           tf_workspace: dev
           tf_variables: "variables.dev.tfvars.json"
           tf_credentials: "GOOGLE_CREDENTIALS_DEV"
+          tf_cloudflare_api_token: "CLOUDFLARE_API_TOKEN_DEV"
         # prod cluster
         - name: Production
           branch: main-prod
           tf_workspace: prod
           tf_variables: "variables.prod.tfvars.json"
           tf_credentials: "GOOGLE_CREDENTIALS_PROD"
+          tf_cloudflare_api_token: "CLOUDFLARE_API_TOKEN_PROD"
     name: "Terraform - ${{ matrix.name }}"
 
     defaults:
@@ -117,7 +119,7 @@ jobs:
         GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
         GOOGLE_CREDENTIALS: ${{ secrets[matrix.tf_credentials] }}
         EVENT_NAME: ${{ github.event_name }}
-        TF_VAR_cloudflare_api_token: FIXME
+        TF_VAR_cloudflare_api_token: ${{ secrets[matrix.tf_cloudflare_api_token] }}
       run: |
         terraform plan -out=tfplan -input=false -var-file="$TF_VARIABLES" -no-color
 

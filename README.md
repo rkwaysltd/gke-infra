@@ -110,12 +110,27 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
 
     - copy content of `./terraform-sa-key-prod.json` file into `GOOGLE_CREDENTIALS_PROD` GitHub project secret
 
-## Scratchpad.
+1. Configure [cert-manager](https://cert-manager.io/) for managing TLS certificates via Cloudflare DNS01 Challenge Provider
 
-    ```sh
-    gcloud container clusters list
-    gcloud container clusters get-credentials gke-cluster
-    ```
+    - API tokens should be created via [Cloudflare dashboard](https://dash.cloudflare.com/profile/api-tokens) Create Custom Token action
+
+    - permissions for API tokens:
+
+        - Zone.Zone:Read (three pull-down buttons: Zone, DNS, Edit)
+        - Zone.DNS:Edit (`+ Add more`, then choose Zone, Zone, Read)
+
+    - it's good idea to pick specific domains in the `Zone Resources` section (separate for dev and prod clusters)
+
+    - create dev API token for development cluster domains and put the token in the `CLOUDFLARE_API_TOKEN_DEV` GitHub project secret
+
+    - create prod API token for production cluster domains and put the token in the `CLOUDFLARE_API_TOKEN_PROD` GitHub project secret
+
+## Scratchpad
+
+```sh
+gcloud container clusters list
+gcloud container clusters get-credentials gke-cluster
+```
 
 ## Local machine usage
 
@@ -126,7 +141,7 @@ Issuing commands from local machine should only be considered in the cluster dev
 - run `PROJECT_ID="$(jq -re .project_id < ./variables.dev.tfvars.json)" ./render_tmpl.sh` script
 - run `TF_WORKSPACE= terraform init`
 
-It should be possible to e.g. see output from `GOOGLE_CREDENTIALS="$GOOGLE_CREDENTIALS_DEV" TF_WORKSPACE=dev terraform plan -var-file=./variables.dev.tfvars.json` command.
+It should be possible to e.g. see output from `GOOGLE_CREDENTIALS="$GOOGLE_CREDENTIALS_DEV" TF_WORKSPACE=dev TF_VAR_cloudflare_api_token="$CLOUDFLARE_API_TOKEN_DEV" terraform plan -var-file=./variables.dev.tfvars.json` command.
 
 ## Local machine (gcloud) cleanup
 
