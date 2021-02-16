@@ -130,7 +130,7 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const plan = process.env.PLAN
-          const plan_out = plan.split(`\n`).map(v => v.match(`: Refreshing state...`) ? `` : v).join(`\n`).trim()
+          const plan_out = plan.split(`\n`).map(v => v.match(`: Refreshing state...`) || v.match(`Acquiring state lock.`) ? `` : v).join(`\n`).trim()
 
           const output = `#### Cluster ☸️ \`${{ matrix.name }}\`
 
