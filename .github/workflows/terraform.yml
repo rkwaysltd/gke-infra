@@ -131,10 +131,7 @@ jobs:
         if [[ $EVENT_NAME == pull_request ]]; then
           # enable command workflow processing
           echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
-          #echo "::set-output name=tf_plan::`terraform show -no-color tfplan`"
-          echo TEST
-          terraform show -no-color tfplan
-          echo TEST END
+          echo "::set-output name=tf_plan::`terraform show -no-color tfplan | base64`"
         fi
 
     - name: Append plan to PR
@@ -145,6 +142,7 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
+          const plan = Buffer.from(process.env.PLAN, 'base64').toString('utf8')
           const output = `#### Cluster ☸️ \`${{ matrix.name }}\`
 
           #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
@@ -154,7 +152,7 @@ jobs:
           
           <details><summary>Show Plan</summary>
           
-          \`\`\`${process.env.PLAN}\`\`\`
+          \`\`\`${plan}\`\`\`
           
           </details>
           
