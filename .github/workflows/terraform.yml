@@ -122,17 +122,23 @@ jobs:
         GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
         GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
         GOOGLE_CREDENTIALS: ${{ secrets[matrix.tf_credentials] }}
+        EVENT_NAME: ${{ github.event_name }}
         TF_VAR_cloudflare_api_token: FIXME
       run: |
         # disable command workflow processing
         echo "::stop-commands::`echo -n ${{ github.token }} | sha256sum | head -c 64`"
         terraform plan -out=tfplan -input=false -var-file="$TF_VARIABLES" -no-color
+        if [[ $EVENT_NAME == pull_request ]]; then
+          # enable command workflow processing
+          echo "::`echo -n ${{ github.token }} | sha256sum | head -c 64`::"
+          echo '::set-output name=tf_plan::`terraform show -no-color tfplan`'
+        fi
 
     - name: Append plan to PR
       uses: actions/github-script@0.9.0
       if: github.event_name == 'pull_request' && github.base_ref == matrix.branch
       env:
-        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        PLAN: "${{ steps.plan.outputs.tf_plan }}"
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
