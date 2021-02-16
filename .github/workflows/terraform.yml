@@ -125,7 +125,7 @@ jobs:
       uses: actions/github-script@0.9.0
       if: github.event_name == 'pull_request' && github.base_ref == matrix.branch
       env:
-        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        PLAN: "${{ steps.plan.outputs.stdout }}"
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
@@ -141,7 +141,9 @@ jobs:
           
           <details><summary>Show Plan</summary>
           
-          \`\`\`${plan_out}\`\`\`
+          \`\`\`terraform
+          ${plan_out}
+          \`\`\`
           
           </details>
           
