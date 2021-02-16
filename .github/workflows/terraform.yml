@@ -129,6 +129,9 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
+          const plan = process.env.PLAN
+          const plan_out = plan.split(`\n`).map(v => v.match(`: Refreshing state...`) ? `` : v).join(`\n`).trim()
+
           const output = `#### Cluster ☸️ \`${{ matrix.name }}\`
 
           #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
@@ -138,7 +141,7 @@ jobs:
           
           <details><summary>Show Plan</summary>
           
-          \`\`\`${process.env.PLAN}\`\`\`
+          \`\`\`${plan_out}\`\`\`
           
           </details>
           
