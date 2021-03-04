@@ -119,7 +119,10 @@ jobs:
         GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
         GOOGLE_CREDENTIALS: ${{ secrets[matrix.tf_credentials] }}
         EVENT_NAME: ${{ github.event_name }}
+        TF_VAR_cloudflare_api_email: ${{ secrets.CLOUDFLARE_API_EMAIL }}
         TF_VAR_cloudflare_api_token: ${{ secrets[matrix.tf_cloudflare_api_token] }}
+        TF_VAR_letsencrypt_email: ${{ secrets.LETSENCRYPT_EMAIL }}
+        TF_VAR_cloudflare_domain_list: ${{ secrets.CLOUDFLARE_DOMAIN_LIST }}
       run: |
         terraform plan -out=tfplan -input=false -var-file="$TF_VARIABLES" -no-color
 

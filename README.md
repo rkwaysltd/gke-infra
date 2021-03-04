@@ -125,6 +125,14 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
 
     - create prod API token for production cluster domains and put the token in the `CLOUDFLARE_API_TOKEN_PROD` GitHub project secret
 
+    - rest of the configuration should be put into the GitHub project secrets or directly in the Terraform input variables files `variables.dev.tfvars.json` and `variables.prod.tfvars.json`
+
+        | GitHub secret | Terraform variable | Description |
+        |---------------|--------------------|-------------|
+        | `LETSENCRYPT_EMAIL` | `letsencrypt_email` | [Let's Encrypt](https://letsencrypt.org/) notifications email |
+        | `CLOUDFLARE_API_EMAIL` | `cloudflare_api_email` | Cloudflare account email |
+        | `CLOUDFLARE_DOMAIN_LIST` | `cloudflare_domain_list` | Comma separated list of domains |
+
 ## Scratchpad
 
 ```sh
