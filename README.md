@@ -145,11 +145,8 @@ gcloud container clusters get-credentials gke-cluster
 Issuing commands from local machine should only be considered in the cluster development stage and never to production cluster.
 
 - update `./secrets` file based on `./secrets.example`
-- run `set -a; . .secrets; set +a` to set shell variables
-- run `PROJECT_ID="$(jq -re .project_id < ./variables.dev.tfvars.json)" ./render_tmpl.sh` script
-- run `TF_WORKSPACE= terraform init`
-
-It should be possible to e.g. see output from `GOOGLE_CREDENTIALS="$GOOGLE_CREDENTIALS_DEV" TF_WORKSPACE=dev TF_VAR_cloudflare_api_token="$CLOUDFLARE_API_TOKEN_DEV" terraform plan -var-file=./variables.dev.tfvars.json` command.
+- run `./scripts/terraform_local_dev.sh init`
+- run `./scripts/terraform_local_dev.sh plan` and possibly `./scripts/terraform_local_dev.sh apply`
 
 ## Local machine (gcloud) cleanup
 
