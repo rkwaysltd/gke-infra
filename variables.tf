@@ -56,6 +56,7 @@ variable "letsencrypt_email" {
 
 variable "cloudflare_api_token" {
   type        = string
+  sensitive   = true
   description = "Cloudflare API token for cert-manager"
   default     = ""
 }
