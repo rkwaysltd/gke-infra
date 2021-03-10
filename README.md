@@ -2,11 +2,19 @@
 
 ## Design choices
 
+### Project
+
+- Two clusters - first for development and second for production deployments.
+
+### Terraform
+
 - Separate project for Terraform state (contains cluster credentials).
 - Terraform state bucket located in London without geo-redundancy.
-- Two clusters - first for development and second for production deployments.
 - Terraform `plan` stored as comment on PR issues.
 - Terraform execute `apply` command on push to `main` and `main-prod` branches.
+
+### GKE
+
 - _Regular_ [release channel](https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels).
 - _Zonal_ cluster [location type](https://cloud.google.com/kubernetes-engine/docs/concepts/types-of-clusters) while developing infrastructure for cluster.
 - _Default_ network/subnet for cluster as the whole project is dedicated for the cluster. Please [see recommendations](https://cloud.google.com/vpc/docs/vpc#default-network).
@@ -17,6 +25,18 @@
 - [Compute Engine persistent disk CSI Driver](https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/gce-pd-csi-driver) enabled as it's required for customer-managed encryption keys in `storageclass-cmek` Storage Class.
 - Default Storage Class uses `pd-standard` [disk type](https://cloud.google.com/compute/docs/disks).
 - [Network Policy](https://cloud.google.com/kubernetes-engine/docs/concepts/network-overview#limit-connectivity-pods) enabled in cluster as a way to secure apps environments from each other.
+
+### Ingress Networking
+
+- [Container-native load balancing](https://cloud.google.com/kubernetes-engine/docs/concepts/container-native-load-balancing) is much better than other options.
+
+    Preferred flow route: Client -> GCP load-balancer with global IP address -> Nginx Ingress Controller Pods via [NEG](https://cloud.google.com/load-balancing/docs/negs) -> App Pods directly via [Endpoints](https://v1-18.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#endpoints-v1-core).
+
+- GKE Ingress Controller enabled but not used in this setup.
+
+    It's [a requirement](https://cloud.google.com/kubernetes-engine/docs/concepts/container-native-load-balancing#requirements) of the container-native load-balancing. Any [Ingress](https://v1-18.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#ingress-v1beta1-networking-k8s-io) object with `""` (empty string) or `"gce"` in `kubernetes.io/ingress.class` annotation will be handled by GKE Ingress Controller.
+
+- WIP: preserve IP addresses (proxy protocol?)
 
 ## Changes to be made before going into production
 
