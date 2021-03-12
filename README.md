@@ -36,7 +36,21 @@
 
     It's [a requirement](https://cloud.google.com/kubernetes-engine/docs/concepts/container-native-load-balancing#requirements) of the container-native load-balancing. Any [Ingress](https://v1-18.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#ingress-v1beta1-networking-k8s-io) object with `""` (empty string) or `"gce"` in `kubernetes.io/ingress.class` annotation will be handled by GKE Ingress Controller.
 
+- The [Ingress](https://v1-18.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#ingress-v1beta1-networking-k8s-io) resources needs `kubernetes.io/ingress.class` annotation with `ngx` string.
+
+    Example:
+
+    ```yaml
+    metadata:
+      name: foo
+      annotations:
+        kubernetes.io/ingress.class: "ngx"
+    ```
+
 - WIP: preserve IP addresses (proxy protocol?)
+- WIP: real client IP in logs
+- WIP: SSL/TLS test with wildcard cert
+- WIP: stable external IP (global) with RR in cloudflare
 
 ## Changes to be made before going into production
 
