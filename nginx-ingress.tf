@@ -15,17 +15,12 @@ resource "kubernetes_namespace" "nginx_ingress" {
 resource "helm_release" "nginx_ingress" {
   name       = "nginx-ingress"
   repository = "https://kubernetes.github.io/ingress-nginx"
-  chart      = "ingress-nginx/ingress-nginx"
-  version    = "3.23.0"
+  chart      = "ingress-nginx"
+  version    = "3.24.0"
   namespace  = kubernetes_namespace.nginx_ingress.metadata[0].name
   skip_crds  = false
 
-#  set {
-#    name  = "installCRDs"
-#    value = "true"
-#  }
-#
-#  values = [
-#    file("certman-values.yaml")
-#  ]
+  values = [
+    file("chart-values/nginx-ingress-values.yaml")
+  ]
 }
