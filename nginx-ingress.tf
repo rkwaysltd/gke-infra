@@ -1,5 +1,9 @@
 resource "google_compute_global_address" "nginx_ingress_ip" {
   name = "nginx-ingress-ip"
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "kubernetes_namespace" "nginx_ingress" {
