@@ -43,6 +43,7 @@ for t in dev prod; do
     for role in \
         "roles/compute.viewer" \
         "roles/compute.securityAdmin" \
+        "roles/compute.instanceAdmin" \
         "roles/container.admin" \
         "roles/iam.serviceAccountAdmin" \
         "roles/iam.serviceAccountUser" \
