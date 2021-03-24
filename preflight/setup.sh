@@ -43,7 +43,7 @@ for t in dev prod; do
     for role in \
         "roles/compute.viewer" \
         "roles/compute.securityAdmin" \
-        "roles/compute.instanceAdmin" \
+        "roles/compute.networkAdmin" \
         "roles/container.admin" \
         "roles/iam.serviceAccountAdmin" \
         "roles/iam.serviceAccountUser" \
@@ -55,6 +55,18 @@ for t in dev prod; do
             --member="serviceAccount:terraform@$PROJECT_ID.iam.gserviceaccount.com" \
             --role="$role"
     done
+
+    # remove not needed permissions (if granted in previous script version)
+    for role in \
+        "roles/compute.instanceAdmin" \
+        ""
+    do
+        [ "$role" != "" ] || continue
+        gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+            --member="serviceAccount:terraform@$PROJECT_ID.iam.gserviceaccount.com" \
+            --role="$role"
+    done
+
 done
 
 gcloud config configurations activate "$GCLOUD_CONFIG"
