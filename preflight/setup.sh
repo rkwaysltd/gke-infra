@@ -58,7 +58,6 @@ for t in dev prod; do
 
     # remove not needed permissions (if granted in previous script version)
     for role in \
-        "roles/compute.instanceAdmin" \
         ""
     do
         [ "$role" != "" ] || continue
