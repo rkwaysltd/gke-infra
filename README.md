@@ -84,6 +84,16 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
 
 1. Create master project in [Google Cloud console](https://console.cloud.google.com/cloud-resource-manager). Highly confidential Terraform state will be kept in a GCS bucket in that project.
 
+    - add gcloud `gke-infra-master` configuration (please change `owner.email.account@gmail.com` to correct address)
+
+        ```
+        PROJID="<master project name>"
+        gcloud config configurations create gke-infra-master
+        gcloud config set account owner.email.account@gmail.com
+        gcloud config set project "$PROJID"
+        gcloud auth login --activate --no-launch-browser
+        ```
+
     - create Terraform backend SA
 
         ```sh
@@ -186,6 +196,7 @@ Issuing commands from local machine should only be considered in the cluster dev
 
 ```sh
 gcloud config configurations activate default
+gcloud config configurations delete gke-infra-master
 gcloud config configurations delete gke-infra-dev
 gcloud config configurations delete gke-infra-prod
 ```
