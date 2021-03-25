@@ -20,6 +20,14 @@ resource "kubernetes_namespace" "nginx_ingress" {
   }
 }
 
+data "template_file" "nginx_ingress_helm_chart" {
+  template = file("${path.module}/chart-values/nginx-ingress-values.yaml.tmpl")
+
+  vars = {
+    project_id = var.project_id
+  }
+}
+
 resource "helm_release" "nginx_ingress" {
   name       = "nginx-ingress"
   repository = "https://kubernetes.github.io/ingress-nginx"
@@ -29,6 +37,15 @@ resource "helm_release" "nginx_ingress" {
   skip_crds  = false
 
   values = [
-    file("chart-values/nginx-ingress-values.yaml")
+    data.template_file.nginx_ingress_helm_chart.rendered
   ]
+
 }
+
+#data "google_compute_network_endpoint_group" "ingress_nginx_80" {
+#  name = "${var.project_id}-ingress-nginx-80"
+#}
+#
+#data "google_compute_network_endpoint_group" "ingress_nginx_443" {
+#  name = "${var.project_id}-ingress-nginx-443"
+#}
