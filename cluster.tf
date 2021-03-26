@@ -85,7 +85,8 @@ module "gke" {
   }
 
   node_pools_tags = {
-    all = []
+    # Nginx Ingress controller Pods are not limited to any particular node
+    all = ["load-balanced-backend"]
 
     default-node-pool = [
       "default-node-pool",

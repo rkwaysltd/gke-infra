@@ -72,3 +72,33 @@ resource "google_compute_health_check" "nginx_ingress_443_health_check" {
     proxy_header       = "PROXY_V1"
   }
 }
+
+resource "google_compute_firewall" "nginx_ingress_health_check" {
+  name      = "nginx-ingress-health-check"
+  network   = data.google_compute_network.default.id
+  direction = "INGRESS"
+
+  source_ranges = var.load_balancing_health_check_cidr
+  target_tags   = ["load-balanced-backend"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80", "443"]
+  }
+}
+
+resource "google_compute_backend_service" "nginx_ingress_443" {
+  name          = "nginx-ingress-443"
+  protocol      = "TCP"
+  health_checks = [google_compute_health_check.nginx_ingress_443_health_check.id]
+
+  dynamic "backend" {
+    for_each = toset(module.gke.zones)
+
+    content {
+      group                        = data.google_compute_network_endpoint_group.nginx_ingress_443[backend.value].id
+      balancing_mode               = "CONNECTION"
+      max_connections_per_endpoint = var.load_balancing_max_connections_per_endpoint
+    }
+  }
+}

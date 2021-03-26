@@ -72,3 +72,16 @@ variable "cloudflare_domain_list" {
   description = "Comma separated list of domains for Cloudflare API token to manage."
   default     = ""
 }
+
+# https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#max-worker-connections
+variable "load_balancing_max_connections_per_endpoint" {
+  description = "Configuration for GKE/Nginx load balancing: max_connections_per_endpoint based on default max-worker-connections (but ignores number of workers in Pod)"
+  type        = number
+  default     = 16384
+}
+
+# https://cloud.google.com/load-balancing/docs/tcp#firewall_rules
+variable "load_balancing_health_check_cidr" {
+  description = "Configuration for GKE/Nginx load balancing: source IPs for health checks"
+  default     = ["130.211.0.0/22", "35.191.0.0/16"]
+}
