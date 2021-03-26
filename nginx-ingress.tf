@@ -55,3 +55,20 @@ data "google_compute_network_endpoint_group" "nginx_ingress_443" {
   name = "${var.project_id}-nginx-ingress-443"
   zone = each.value
 }
+
+resource "google_compute_health_check" "nginx_ingress_443_health_check" {
+  name        = "nginx-ingress-443-health-check"
+  description = "Health check via GET https://healthz"
+
+  # 5/5/2/2 are defaults from https://console.cloud.google.com/compute/healthChecksAdd
+  #timeout_sec         = 5
+  #check_interval_sec  = 5
+  #healthy_threshold   = 2
+  #unhealthy_threshold = 2
+
+  https_health_check {
+    port_specification = "USE_SERVING_PORT"
+    request_path       = "/healthz"
+    #FIXME: turn on later - proxy_header       = "PROXY_V1"
+  }
+}
