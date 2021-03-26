@@ -42,10 +42,16 @@ resource "helm_release" "nginx_ingress" {
 
 }
 
-#data "google_compute_network_endpoint_group" "ingress_nginx_80" {
-#  name = "${var.project_id}-ingress-nginx-80"
-#}
-#
-#data "google_compute_network_endpoint_group" "ingress_nginx_443" {
-#  name = "${var.project_id}-ingress-nginx-443"
-#}
+data "google_compute_network_endpoint_group" "ingress_nginx_80" {
+  for_each = toset(module.gke.zones)
+
+  name = "${var.project_id}-ingress-nginx-80"
+  zone = each.value
+}
+
+data "google_compute_network_endpoint_group" "ingress_nginx_443" {
+  for_each = toset(module.gke.zones)
+
+  name = "${var.project_id}-ingress-nginx-443"
+  zone = each.value
+}
