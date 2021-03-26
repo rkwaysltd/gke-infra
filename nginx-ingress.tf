@@ -69,6 +69,6 @@ resource "google_compute_health_check" "nginx_ingress_443_health_check" {
   https_health_check {
     port_specification = "USE_SERVING_PORT"
     request_path       = "/healthz"
-    #FIXME: turn on later - proxy_header       = "PROXY_V1"
+    proxy_header       = "PROXY_V1"
   }
 }
