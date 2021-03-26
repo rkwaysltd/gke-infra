@@ -1,7 +1,24 @@
 resource "google_compute_global_address" "nginx_ingress_ip" {
+  # only for PREMIUM network tier
+  count = (var.load_balancing_network_tier == "PREMIUM") ? 1 : 0
+
   name = "nginx-ingress-ip"
 
   lifecycle {
+    # change this to false if you need to switch network tier
+    prevent_destroy = true
+  }
+}
+
+resource "google_compute_address" "nginx_ingress_ip" {
+  # only for STANDARD network tier
+  count = (var.load_balancing_network_tier == "STANDARD") ? 1 : 0
+
+  name = "nginx-ingress-ip"
+  network_tier = var.load_balancing_network_tier
+
+  lifecycle {
+    # change this to false if you need to switch network tier
     prevent_destroy = true
   }
 }
@@ -101,4 +118,33 @@ resource "google_compute_backend_service" "nginx_ingress_443" {
       max_connections_per_endpoint = var.load_balancing_max_connections_per_endpoint
     }
   }
+}
+
+resource "google_compute_target_tcp_proxy" "nginx_ingress_443" {
+  name            = "nginx-ingress-443"
+  backend_service = google_compute_backend_service.nginx_ingress_443.id
+  proxy_header    = "PROXY_V1"
+}
+
+resource "google_compute_global_forwarding_rule" "nginx_ingress_443" {
+  # only for PREMIUM network tier
+  count = (var.load_balancing_network_tier == "PREMIUM") ? 1 : 0
+
+  name        = "nginx-ingress-443"
+  ip_address  = google_compute_global_address.nginx_ingress_ip[0].address
+  ip_protocol = "TCP"
+  port_range  = "443"
+  target      = google_compute_target_tcp_proxy.nginx_ingress_443.self_link
+}
+
+resource "google_compute_forwarding_rule" "nginx_ingress_443" {
+  # only for STANDARD network tier
+  count = (var.load_balancing_network_tier == "STANDARD") ? 1 : 0
+
+  name        = "nginx-ingress-443"
+  ip_address  = google_compute_address.nginx_ingress_ip[0].address
+  ip_protocol = "TCP"
+  port_range  = "443"
+  network_tier = var.load_balancing_network_tier
+  target      = google_compute_target_tcp_proxy.nginx_ingress_443.self_link
 }

@@ -86,3 +86,15 @@ variable "load_balancing_health_check_cidr" {
   type        = list(string)
   default     = ["130.211.0.0/22", "35.191.0.0/16"]
 }
+
+# https://cloud.google.com/load-balancing/docs/tcp#load-balancer-behavior-in-network-service-tiers
+variable "load_balancing_network_tier" {
+  description = "Configuration for GKE/Nginx load balancing: Network Tier for traffic"
+  type        = string
+  default     = "PREMIUM"
+
+  validation {
+    condition     = can(regex("^(PREMIUM|STANDARD)$", var.load_balancing_network_tier))
+    error_message = "Must be PREMIUM or STANDARD."
+  }
+}

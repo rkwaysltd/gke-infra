@@ -47,6 +47,8 @@
         kubernetes.io/ingress.class: "ngx"
     ```
 
+- While it's possible to set `PREMIUM` or `STANDARD` Network Tier changes on existing cluster needs to be carefully consiered as the entry IP address is going to change.
+
 - WIP: preserve IP addresses (proxy protocol?)
 - WIP: real client IP in logs
 - WIP: SSL/TLS test with wildcard cert
