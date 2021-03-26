@@ -96,7 +96,7 @@ resource "google_compute_backend_service" "nginx_ingress_443" {
     for_each = toset(module.gke.zones)
 
     content {
-      group                        = data.google_compute_network_endpoint_group.nginx_ingress_443[backend.value].id
+      group                        = data.google_compute_network_endpoint_group.nginx_ingress_443[backend.value].self_link
       balancing_mode               = "CONNECTION"
       max_connections_per_endpoint = var.load_balancing_max_connections_per_endpoint
     }
