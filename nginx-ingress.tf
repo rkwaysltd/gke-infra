@@ -146,3 +146,39 @@ resource "google_compute_forwarding_rule" "nginx_ingress_443" {
   network_tier = var.load_balancing_network_tier
   target       = google_compute_target_tcp_proxy.nginx_ingress_443.self_link
 }
+
+resource "google_compute_url_map" "nginx_ingress_80_https_redirect" {
+  name = "nginx-ingress-80-https-redirect"
+
+  default_url_redirect {
+    https_redirect         = true
+    redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"
+    strip_query            = false
+  }
+}
+
+resource "google_compute_target_http_proxy" "nginx_ingress_80_https_redirect" {
+  name    = "nginx-ingress-80-https-redirect"
+  url_map = google_compute_url_map.nginx_ingress_80_https_redirect.id
+}
+
+resource "google_compute_global_forwarding_rule" "nginx_ingress_80_https_redirect" {
+  # only for PREMIUM network tier
+  count = (var.load_balancing_network_tier == "PREMIUM") ? 1 : 0
+
+  name       = "nginx-ingress-80-https-redirect"
+  ip_address = google_compute_global_address.nginx_ingress_ip[0].address
+  port_range = "80"
+  target     = google_compute_target_http_proxy.nginx_ingress_80_https_redirect.self_link
+}
+
+resource "google_compute_forwarding_rule" "nginx_ingress_80_https_redirect" {
+  # only for STANDARD network tier
+  count = (var.load_balancing_network_tier == "STANDARD") ? 1 : 0
+
+  name         = "nginx-ingress-80-https-redirect"
+  ip_address   = google_compute_address.nginx_ingress_ip[0].address
+  port_range   = "80"
+  network_tier = var.load_balancing_network_tier
+  target       = google_compute_target_http_proxy.nginx_ingress_80_https_redirect.self_link
+}
