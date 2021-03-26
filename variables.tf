@@ -87,6 +87,13 @@ variable "load_balancing_health_check_cidr" {
   default     = ["130.211.0.0/22", "35.191.0.0/16"]
 }
 
+# https://cloud.google.com/load-balancing/docs/tcp#firewall_rules
+variable "load_balancing_gfe_proxy_cidr" {
+  description = "Configuration for GKE/Nginx load balancing: source IPs for Google Front End (GFE) proxies"
+  type        = list(string)
+  default     = ["130.211.0.0/22", "35.191.0.0/16"]
+}
+
 # https://cloud.google.com/load-balancing/docs/tcp#load-balancer-behavior-in-network-service-tiers
 variable "load_balancing_network_tier" {
   description = "Configuration for GKE/Nginx load balancing: Network Tier for traffic"

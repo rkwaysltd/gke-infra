@@ -14,7 +14,7 @@ resource "google_compute_address" "nginx_ingress_ip" {
   # only for STANDARD network tier
   count = (var.load_balancing_network_tier == "STANDARD") ? 1 : 0
 
-  name = "nginx-ingress-ip"
+  name         = "nginx-ingress-ip"
   network_tier = var.load_balancing_network_tier
 
   lifecycle {
@@ -37,14 +37,6 @@ resource "kubernetes_namespace" "nginx_ingress" {
   }
 }
 
-data "template_file" "nginx_ingress_helm_chart" {
-  template = file("${path.module}/chart-values/nginx-ingress-values.yaml.tmpl")
-
-  vars = {
-    project_id = var.project_id
-  }
-}
-
 resource "helm_release" "nginx_ingress" {
   name       = "nginx-ingress"
   repository = "https://kubernetes.github.io/ingress-nginx"
@@ -54,7 +46,13 @@ resource "helm_release" "nginx_ingress" {
   skip_crds  = false
 
   values = [
-    data.template_file.nginx_ingress_helm_chart.rendered
+    templatefile(
+      "${path.module}/chart-values/nginx-ingress-values.yaml.tmpl",
+      {
+        project_id     = var.project_id
+        gfe_proxy_cird = var.load_balancing_gfe_proxy_cidr
+      }
+    )
   ]
 
 }
@@ -141,10 +139,10 @@ resource "google_compute_forwarding_rule" "nginx_ingress_443" {
   # only for STANDARD network tier
   count = (var.load_balancing_network_tier == "STANDARD") ? 1 : 0
 
-  name        = "nginx-ingress-443"
-  ip_address  = google_compute_address.nginx_ingress_ip[0].address
-  ip_protocol = "TCP"
-  port_range  = "443"
+  name         = "nginx-ingress-443"
+  ip_address   = google_compute_address.nginx_ingress_ip[0].address
+  ip_protocol  = "TCP"
+  port_range   = "443"
   network_tier = var.load_balancing_network_tier
-  target      = google_compute_target_tcp_proxy.nginx_ingress_443.self_link
+  target       = google_compute_target_tcp_proxy.nginx_ingress_443.self_link
 }

@@ -3,8 +3,8 @@ controller:
   config:
     use-proxy-protocol: "true"
     proxy-protocol-header-timeout: "2s"
-    #enable-real-ip: "true"
-    #proxy-real-ip-cidr: FIXME
+    enable-real-ip: "true"
+    proxy-real-ip-cidr: "${join(", ", gfe_proxy_cird)}"
     use-forwarded-headers: "false"
   service:
     type: ClusterIP
