@@ -83,5 +83,6 @@ variable "load_balancing_max_connections_per_endpoint" {
 # https://cloud.google.com/load-balancing/docs/tcp#firewall_rules
 variable "load_balancing_health_check_cidr" {
   description = "Configuration for GKE/Nginx load balancing: source IPs for health checks"
+  type        = list(string)
   default     = ["130.211.0.0/22", "35.191.0.0/16"]
 }
