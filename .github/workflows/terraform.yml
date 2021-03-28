@@ -68,7 +68,7 @@ jobs:
         (github.event_name == 'pull_request' && github.base_ref == matrix.branch)
       uses: google-github-actions/setup-gcloud@master
       with:
-        version: '321.0.0'
+        version: '333.0.0'
         service_account_key: ${{ secrets[matrix.tf_credentials] }}
         project_id: ${{ steps.preflight.outputs.project_id }}
 
@@ -78,7 +78,7 @@ jobs:
         (github.event_name == 'pull_request' && github.base_ref == matrix.branch)
       uses: hashicorp/setup-terraform@v1
       with:
-        terraform_version: 0.14.3
+        terraform_version: 0.14.9
 
     - name: Terraform Format
       if: |
