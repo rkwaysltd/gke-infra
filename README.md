@@ -2,13 +2,21 @@
 
 ## Design choices
 
+### Project
+
+- Two clusters - first for development and second for production deployments.
+
+### Terraform
+
 - Separate project for Terraform state (contains cluster credentials).
 - Terraform state bucket located in London without geo-redundancy.
-- Two clusters - first for development and second for production deployments.
 - Terraform `plan` stored as comment on PR issues.
 - Terraform execute `apply` command on push to `main` and `main-prod` branches.
+
+### GKE
+
 - _Regular_ [release channel](https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels).
-- _Zonal_ cluster [location type](https://cloud.google.com/kubernetes-engine/docs/concepts/types-of-clusters) while developing infrastructure for cluster.
+- _Multi zonal_ clusters not supported. Production cluster should have redundant control plane, development cluster can live in single zone.
 - _Default_ network/subnet for cluster as the whole project is dedicated for the cluster. Please [see recommendations](https://cloud.google.com/vpc/docs/vpc#default-network).
 - __Not private-cluster__. While good for security it adds a huge amount of complexity to cluster infrastructure.
 - Google Cloud Storage in the cluster project should __never be used for highly confidential information__. It's primary purpose is to hold the Container Registry and the cluster nodes have read-only access to all buckets. Create GCS bucket for confidential data in separate project.
@@ -18,11 +26,37 @@
 - Default Storage Class uses `pd-standard` [disk type](https://cloud.google.com/compute/docs/disks).
 - [Network Policy](https://cloud.google.com/kubernetes-engine/docs/concepts/network-overview#limit-connectivity-pods) enabled in cluster as a way to secure apps environments from each other.
 
+### Ingress Networking
+
+- [Container-native load balancing](https://cloud.google.com/kubernetes-engine/docs/concepts/container-native-load-balancing) is much better than other options.
+
+    Preferred flow route: Client -> GCP load-balancer with global IP address -> Nginx Ingress Controller Pods via [NEG](https://cloud.google.com/load-balancing/docs/negs) -> App Pods directly via [Endpoints](https://v1-18.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#endpoints-v1-core).
+
+- GKE Ingress Controller enabled but not used in this setup.
+
+    It's [a requirement](https://cloud.google.com/kubernetes-engine/docs/concepts/container-native-load-balancing#requirements) of the container-native load-balancing. Any [Ingress](https://v1-18.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#ingress-v1beta1-networking-k8s-io) object with `""` (empty string) or `"gce"` in `kubernetes.io/ingress.class` annotation will be handled by GKE Ingress Controller.
+
+- The [Ingress](https://v1-18.docs.kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#ingress-v1beta1-networking-k8s-io) resources needs `kubernetes.io/ingress.class` annotation with `ngx` string.
+
+    Example:
+
+    ```yaml
+    metadata:
+      name: foo
+      annotations:
+        kubernetes.io/ingress.class: "ngx"
+    ```
+
+- While it's possible to set `PREMIUM` or `STANDARD` Network Tier changes on existing cluster needs to be carefully consiered as the entry IP address is going to change.
+
+- WIP: SSL/TLS test with wildcard cert
+- WIP: stable external IP (global) with RR in cloudflare
+
 ## Changes to be made before going into production
 
 This settings cannot be changed on existing cluster. Full cluster re-creation required.
 
-- Switch to _Regional_ [location type](https://cloud.google.com/kubernetes-engine/docs/concepts/types-of-clusters) to prevent API server outages e.g. during maintenance/upgrades. Please check __Overview__ and __Limitations__ sections in [documentation](https://cloud.google.com/kubernetes-engine/docs/concepts/regional-clusters).
+- Switch to _Regional_ [location type](https://cloud.google.com/kubernetes-engine/docs/concepts/types-of-clusters) to prevent API server outages e.g. during maintenance/upgrades. Please check __Overview__ and __Limitations__ sections in [documentation](https://cloud.google.com/kubernetes-engine/docs/concepts/regional-clusters). Single entry in `zones` Terraform variable means [_Zonal_ cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/types-of-clusters), add more zones to switch to [_Regional_ cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/types-of-clusters).
 
 ## Encryption settings
 
@@ -49,6 +83,16 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
 1. Fork this project on Github, set branch `main-prod` as protected.
 
 1. Create master project in [Google Cloud console](https://console.cloud.google.com/cloud-resource-manager). Highly confidential Terraform state will be kept in a GCS bucket in that project.
+
+    - add gcloud `gke-infra-master` configuration (please change `owner.email.account@gmail.com` to correct address)
+
+        ```
+        PROJID="<master project name>"
+        gcloud config configurations create gke-infra-master
+        gcloud config set account owner.email.account@gmail.com
+        gcloud config set project "$PROJID"
+        gcloud auth login --activate --no-launch-browser
+        ```
 
     - create Terraform backend SA
 
@@ -152,6 +196,7 @@ Issuing commands from local machine should only be considered in the cluster dev
 
 ```sh
 gcloud config configurations activate default
+gcloud config configurations delete gke-infra-master
 gcloud config configurations delete gke-infra-dev
 gcloud config configurations delete gke-infra-prod
 ```

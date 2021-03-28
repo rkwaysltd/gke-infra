@@ -10,7 +10,7 @@ variable "region" {
 
 variable "zones" {
   type        = list(string)
-  description = "The zones to host the cluster in."
+  description = "The zones to host the cluster in. Single entry means it's zonal cluster. Multiple entries for regional clusters."
 }
 
 variable "name" {
@@ -71,4 +71,37 @@ variable "cloudflare_domain_list" {
   type        = string
   description = "Comma separated list of domains for Cloudflare API token to manage."
   default     = ""
+}
+
+# https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#max-worker-connections
+variable "load_balancing_max_connections_per_endpoint" {
+  description = "Configuration for GKE/Nginx load balancing: max_connections_per_endpoint based on default max-worker-connections (but ignores number of workers in Pod)"
+  type        = number
+  default     = 16384
+}
+
+# https://cloud.google.com/load-balancing/docs/tcp#firewall_rules
+variable "load_balancing_health_check_cidr" {
+  description = "Configuration for GKE/Nginx load balancing: source IPs for health checks"
+  type        = list(string)
+  default     = ["130.211.0.0/22", "35.191.0.0/16"]
+}
+
+# https://cloud.google.com/load-balancing/docs/tcp#firewall_rules
+variable "load_balancing_gfe_proxy_cidr" {
+  description = "Configuration for GKE/Nginx load balancing: source IPs for Google Front End (GFE) proxies"
+  type        = list(string)
+  default     = ["130.211.0.0/22", "35.191.0.0/16"]
+}
+
+# https://cloud.google.com/load-balancing/docs/tcp#load-balancer-behavior-in-network-service-tiers
+variable "load_balancing_network_tier" {
+  description = "Configuration for GKE/Nginx load balancing: Network Tier for traffic"
+  type        = string
+  default     = "PREMIUM"
+
+  validation {
+    condition     = can(regex("^(PREMIUM|STANDARD)$", var.load_balancing_network_tier))
+    error_message = "Must be PREMIUM or STANDARD."
+  }
 }

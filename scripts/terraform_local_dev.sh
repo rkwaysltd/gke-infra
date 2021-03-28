@@ -19,6 +19,15 @@ else
     ws="dev"
 fi
 
+opts=
+case "${cmd}" in
+state)
+    # no -var-file for state command
+    ;;
+*)
+    opts="-var-file=$vars"
+esac
+
 set -a
 TF_WORKSPACE="$ws"
 GOOGLE_CREDENTIALS="${GOOGLE_CREDENTIALS_DEV:?}"
@@ -27,4 +36,4 @@ TF_VAR_letsencrypt_email="${LETSENCRYPT_EMAIL:-}"
 TF_VAR_cloudflare_api_email="${CLOUDFLARE_API_EMAIL:-}"
 TF_VAR_cloudflare_domain_list="${CLOUDFLARE_DOMAIN_LIST:-}"
 set +a
-terraform "$cmd" -var-file="$vars" "$@"
+terraform "$cmd" $opts "$@"

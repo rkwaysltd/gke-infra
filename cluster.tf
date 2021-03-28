@@ -1,13 +1,9 @@
 module "gke" {
-  source     = "github.com/rkwaysltd/terraform-google-kubernetes-engine?ref=gke-infra/modules/beta-public-cluster"
-  project_id = var.project_id
-  # for development phase
-  regional = false
-  region   = "europe-west2"
-  zones    = ["europe-west2-b"]
-  # for production phase
-  #region                     = var.region
-  #zones                      = var.zones
+  source                     = "github.com/rkwaysltd/terraform-google-kubernetes-engine?ref=gke-infra/modules/beta-public-cluster"
+  project_id                 = var.project_id
+  regional                   = (length(var.zones) > 1) ? true : false
+  region                     = var.region
+  zones                      = var.zones
   name                       = var.name
   release_channel            = "REGULAR"
   gce_pd_csi_driver          = true
@@ -85,7 +81,8 @@ module "gke" {
   }
 
   node_pools_tags = {
-    all = []
+    # Nginx Ingress controller Pods are not limited to any particular node
+    all = ["load-balanced-backend"]
 
     default-node-pool = [
       "default-node-pool",

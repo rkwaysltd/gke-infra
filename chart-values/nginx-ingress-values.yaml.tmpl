@@ -1,0 +1,14 @@
+controller:
+  ingressClass: ngx
+  config:
+    use-proxy-protocol: "true"
+    proxy-protocol-header-timeout: "2s"
+    enable-real-ip: "true"
+    proxy-real-ip-cidr: "${join(", ", gfe_proxy_cird)}"
+    use-forwarded-headers: "false"
+  service:
+    type: ClusterIP
+    annotations:
+      cloud.google.com/neg: '{"exposed_ports": {"80":{"name": "${project_id}-nginx-ingress-80"},"443":{"name": "${project_id}-nginx-ingress-443"}}}'
+
+# vim: filetype=yaml
