@@ -16,7 +16,7 @@
 ### GKE
 
 - _Regular_ [release channel](https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels).
-- _Zonal_ cluster [location type](https://cloud.google.com/kubernetes-engine/docs/concepts/types-of-clusters) while developing infrastructure for cluster.
+- _Multi zonal_ clusters not supported. Production cluster should have redundant control plane, development cluster can live in single zone.
 - _Default_ network/subnet for cluster as the whole project is dedicated for the cluster. Please [see recommendations](https://cloud.google.com/vpc/docs/vpc#default-network).
 - __Not private-cluster__. While good for security it adds a huge amount of complexity to cluster infrastructure.
 - Google Cloud Storage in the cluster project should __never be used for highly confidential information__. It's primary purpose is to hold the Container Registry and the cluster nodes have read-only access to all buckets. Create GCS bucket for confidential data in separate project.
@@ -56,7 +56,7 @@
 
 This settings cannot be changed on existing cluster. Full cluster re-creation required.
 
-- Switch to _Regional_ [location type](https://cloud.google.com/kubernetes-engine/docs/concepts/types-of-clusters) to prevent API server outages e.g. during maintenance/upgrades. Please check __Overview__ and __Limitations__ sections in [documentation](https://cloud.google.com/kubernetes-engine/docs/concepts/regional-clusters).
+- Switch to _Regional_ [location type](https://cloud.google.com/kubernetes-engine/docs/concepts/types-of-clusters) to prevent API server outages e.g. during maintenance/upgrades. Please check __Overview__ and __Limitations__ sections in [documentation](https://cloud.google.com/kubernetes-engine/docs/concepts/regional-clusters). Single entry in `zones` Terraform variable means [_Zonal_ cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/types-of-clusters), add more zones to switch to [_Regional_ cluster](https://cloud.google.com/kubernetes-engine/docs/concepts/types-of-clusters).
 
 ## Encryption settings
 

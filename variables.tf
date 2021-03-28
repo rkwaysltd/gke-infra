@@ -10,7 +10,7 @@ variable "region" {
 
 variable "zones" {
   type        = list(string)
-  description = "The zones to host the cluster in."
+  description = "The zones to host the cluster in. Single entry means it's zonal cluster. Multiple entries for regional clusters."
 }
 
 variable "name" {
