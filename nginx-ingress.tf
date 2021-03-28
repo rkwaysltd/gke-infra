@@ -58,14 +58,14 @@ resource "helm_release" "nginx_ingress" {
 }
 
 data "google_compute_network_endpoint_group" "nginx_ingress_80" {
-  for_each = toset(module.gke.zones)
+  for_each = toset(var.zones)
 
   name = "${var.project_id}-nginx-ingress-80"
   zone = each.value
 }
 
 data "google_compute_network_endpoint_group" "nginx_ingress_443" {
-  for_each = toset(module.gke.zones)
+  for_each = toset(var.zones)
 
   name = "${var.project_id}-nginx-ingress-443"
   zone = each.value
@@ -108,7 +108,7 @@ resource "google_compute_backend_service" "nginx_ingress_443" {
   health_checks = [google_compute_health_check.nginx_ingress_443_health_check.id]
 
   dynamic "backend" {
-    for_each = toset(module.gke.zones)
+    for_each = toset(var.zones)
 
     content {
       group                        = data.google_compute_network_endpoint_group.nginx_ingress_443[backend.value].self_link
