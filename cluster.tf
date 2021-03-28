@@ -1,7 +1,7 @@
 module "gke" {
-  source     = "github.com/rkwaysltd/terraform-google-kubernetes-engine?ref=gke-infra/modules/beta-public-cluster"
-  project_id = var.project_id
-  regional                   = (length(var.zones) > 1 ) ? true : false
+  source                     = "github.com/rkwaysltd/terraform-google-kubernetes-engine?ref=gke-infra/modules/beta-public-cluster"
+  project_id                 = var.project_id
+  regional                   = (length(var.zones) > 1) ? true : false
   region                     = var.region
   zones                      = var.zones
   name                       = var.name
