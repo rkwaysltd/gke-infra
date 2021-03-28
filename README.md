@@ -49,6 +49,8 @@
 
 - While it's possible to set `PREMIUM` or `STANDARD` Network Tier changes on existing cluster needs to be carefully consiered as the entry IP address is going to change.
 
+- Ingress IP address will be placed in DNS as `<ingress_rr_name>.<configured_domain_name>`, other domain names can use `CNAME` records to point to it.
+
 - WIP: SSL/TLS test with wildcard cert
 - WIP: stable external IP (global) with RR in cloudflare
 
@@ -176,6 +178,7 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
         | `LETSENCRYPT_EMAIL` | `letsencrypt_email` | [Let's Encrypt](https://letsencrypt.org/) notifications email |
         | `CLOUDFLARE_API_EMAIL` | `cloudflare_api_email` | Cloudflare account email |
         | `CLOUDFLARE_DOMAIN_LIST` | `cloudflare_domain_list` | Comma separated list of domains |
+        | `CLOUDFLARE_DOMAIN_INGRESS_RR` | `cloudflare_domain_ingress_rr` | Domain with A-type DNS resource record |
 
 ## Scratchpad
 

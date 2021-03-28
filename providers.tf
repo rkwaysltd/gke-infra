@@ -28,3 +28,16 @@ provider "helm" {
     cluster_ca_certificate = base64decode(module.gke.ca_certificate)
   }
 }
+
+terraform {
+  required_providers {
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 2.0"
+    }
+  }
+}
+
+provider "cloudflare" {
+  api_token = var.cloudflare_api_token
+}
