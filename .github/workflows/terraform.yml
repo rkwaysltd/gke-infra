@@ -35,6 +35,7 @@ jobs:
 
     env:
       TF_IN_AUTOMATION: 1
+      PRIMING_WORKAROUND: ${{ secrets.PRIMING_WORKAROUND }}
       TF_STATE_BUCKET: ${{ secrets.TF_STATE_BUCKET }}
       TF_VARIABLES: ${{ matrix.tf_variables }}
       TF_WORKSPACE: ${{ matrix.tf_workspace }}
@@ -108,6 +109,19 @@ jobs:
       id: validate
       run: |
         terraform validate -no-color
+
+    - name: Priming cluster workaround
+      if: |
+        (github.event_name == 'push' && github.ref == format('refs/heads/{0}', matrix.branch)) &&
+        (env.PRIMING_WORKAROUND == 'yes')
+      id: priming
+      env:
+        GOOGLE_BACKEND_CREDENTIALS: ${{ secrets.GOOGLE_BACKEND_CREDENTIALS }}
+        GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
+        GOOGLE_CREDENTIALS: ${{ secrets[matrix.tf_credentials] }}
+      run: |
+        terraform apply -input=false -var-file="$TF_VARIABLES" -no-color -target=module.gke.google_container_cluster.primary
+        terraform apply -input=false -var-file="$TF_VARIABLES" -no-color -target=helm_release.cert_manager
 
     - name: Terraform Plan
       if: |
