@@ -53,7 +53,7 @@
 
 - Ingress object with Let's Encrypt generated certificate example:
 
-    ```
+    ```yaml
     apiVersion: networking.k8s.io/v1beta1
     kind: Ingress
     metadata:
@@ -204,6 +204,30 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
         | `CLOUDFLARE_API_EMAIL` | `cloudflare_api_email` | Cloudflare account email |
         | `CLOUDFLARE_DOMAIN_LIST` | `cloudflare_domain_list` | Comma separated list of domains |
         | `CLOUDFLARE_DOMAIN_INGRESS_RR` | `cloudflare_domain_ingress_rr` | Domain with A-type DNS resource record |
+
+1. FIXME: First run of Github actions when the clisters don't yet exists are going to fail tu to inter-provider depenency bugs in the project. Please configure terraform to run locally (see _Local machine usage_ below) and execute:
+
+    - for `dev` cluster
+
+        ```sh
+        rm -r .terraform/ .terraform.lock.hcl
+        ./scripts/terraform_local_dev.sh init
+        ./scripts/terraform_local_dev.sh apply -target=module.gke.google_container_cluster.primary
+        ./scripts/terraform_local_dev.sh apply -target=helm_release.cert_manager
+        ./scripts/terraform_local_dev.sh apply -target=helm_release.nginx_ingress
+        ./scripts/terraform_local_dev.sh apply
+        ```
+
+    - for `prod` cluster
+
+        ```sh
+        rm -r .terraform/ .terraform.lock.hcl
+        ./scripts/terraform_local_prod.sh init
+        ./scripts/terraform_local_prod.sh apply -target=module.gke.google_container_cluster.primary
+        ./scripts/terraform_local_prod.sh apply -target=helm_release.cert_manager
+        ./scripts/terraform_local_prod.sh apply -target=helm_release.nginx_ingress
+        ./scripts/terraform_local_prod.sh apply
+        ```
 
 ## Scratchpad
 
