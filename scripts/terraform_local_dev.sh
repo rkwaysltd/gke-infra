@@ -21,7 +21,7 @@ fi
 
 opts=
 case "${cmd}" in
-state)
+state|force-unlock)
     # no -var-file for state command
     ;;
 *)
