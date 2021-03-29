@@ -16,7 +16,7 @@ shift
 if [ "${cmd}" = "init" ]; then
     ws=""
 else
-    ws="dev"
+    ws="prod"
 fi
 
 opts=
