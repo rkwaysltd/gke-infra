@@ -123,6 +123,7 @@ jobs:
         TF_VAR_cloudflare_api_token: ${{ secrets[matrix.tf_cloudflare_api_token] }}
         TF_VAR_letsencrypt_email: ${{ secrets.LETSENCRYPT_EMAIL }}
         TF_VAR_cloudflare_domain_list: ${{ secrets.CLOUDFLARE_DOMAIN_LIST }}
+        TF_VAR_cloudflare_domain_ingress_rr: ${{ secrets.CLOUDFLARE_DOMAIN_INGRESS_RR }}
       run: |
         terraform plan -out=tfplan -input=false -var-file="$TF_VARIABLES" -no-color
 

@@ -18,6 +18,11 @@ variable "name" {
   description = "The name of the cluster."
 }
 
+variable "ingress_rr_name" {
+  type        = string
+  description = "The name of the ingress A-type resource record in DNS.."
+}
+
 variable "machine_type" {
   type        = string
   description = "Type of the node compute engines."
@@ -71,6 +76,18 @@ variable "cloudflare_domain_list" {
   type        = string
   description = "Comma separated list of domains for Cloudflare API token to manage."
   default     = ""
+}
+
+variable "cloudflare_domain_ingress_rr" {
+  type        = string
+  description = "Domain name with ingress A record. Should be one of 'cloudflare_domain_list'."
+  default     = ""
+}
+
+variable "cloudflare_domain_ingress_proxied" {
+  type        = bool
+  description = "Enable Cloudflare proxy for ingress RR."
+  default     = false
 }
 
 # https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#max-worker-connections

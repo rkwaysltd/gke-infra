@@ -182,3 +182,21 @@ resource "google_compute_forwarding_rule" "nginx_ingress_80_https_redirect" {
   network_tier = var.load_balancing_network_tier
   target       = google_compute_target_http_proxy.nginx_ingress_80_https_redirect.self_link
 }
+
+data "cloudflare_zones" "nginx_ingress" {
+  count = (var.cloudflare_api_token == "" || var.cloudflare_domain_ingress_rr == "" ? 0 : 1)
+
+  filter {
+    name = var.cloudflare_domain_ingress_rr
+  }
+}
+
+resource "cloudflare_record" "nginx_ingress" {
+  count = (var.cloudflare_api_token == "" || var.cloudflare_domain_ingress_rr == "" ? 0 : 1)
+
+  zone_id = lookup(data.cloudflare_zones.nginx_ingress[0].zones[0], "id")
+  name    = var.ingress_rr_name
+  value   = (var.load_balancing_network_tier == "PREMIUM") ? google_compute_global_address.nginx_ingress_ip[0].address : google_compute_address.nginx_ingress_ip[0].address
+  type    = "A"
+  proxied = var.cloudflare_domain_ingress_proxied
+}
