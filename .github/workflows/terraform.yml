@@ -120,9 +120,8 @@ jobs:
         GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
         GOOGLE_CREDENTIALS: ${{ secrets[matrix.tf_credentials] }}
       run: |
-        echo "yes" > reply
-        terraform apply -input=false -var-file="$TF_VARIABLES" -no-color -target=module.gke.google_container_cluster.primary < reply
-        terraform apply -input=false -var-file="$TF_VARIABLES" -no-color -target=helm_release.cert_manager < reply
+        echo "yes" | terraform apply -input=false -var-file="$TF_VARIABLES" -no-color -target=module.gke.google_container_cluster.primary
+        echo "yes" | terraform apply -input=false -var-file="$TF_VARIABLES" -no-color -target=helm_release.cert_manager
 
     - name: Terraform Plan
       if: |
