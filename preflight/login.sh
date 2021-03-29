@@ -7,7 +7,7 @@ GCLOUD_CONFIG=$(gcloud config configurations list --format=json | jq -re '.[] | 
 
 for t in dev prod; do
     PROJECT_ID="$(jq -re .project_id < "$D/../variables.${t}.tfvars.json")"
-    gcloud config configurations create gke-infra-${t} || true
+    gcloud config configurations create gke-infra-${t} || gcloud config configurations activate gke-infra-${t}
     gcloud config set account "$OWNER"
     gcloud config set project "$PROJECT_ID"
     gcloud auth login --no-launch-browser
