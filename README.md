@@ -52,7 +52,6 @@
 - Ingress IP address will be placed in DNS as `<ingress_rr_name>.<configured_domain_name>`, other domain names can use `CNAME` records to point to it.
 
 - WIP: SSL/TLS test with wildcard cert
-- WIP: stable external IP (global) with RR in cloudflare
 
 ## Changes to be made before going into production
 
