@@ -51,6 +51,32 @@
 
 - Ingress IP address will be placed in DNS as `<ingress_rr_name>.<configured_domain_name>`, other domain names can use `CNAME` records to point to it.
 
+- Ingress object with Let's Encrypt generated certificate example:
+
+    ```
+    apiVersion: networking.k8s.io/v1beta1
+    kind: Ingress
+    metadata:
+      annotations:
+        kubernetes.io/ingress.class: "ngx"
+        cert-manager.io/cluster-issuer: letsencrypt-issuer
+      name: example-ingress
+      namespace: example-ingress-ns
+    spec:
+      rules:
+      - host: test.example.com
+        http:
+          paths:
+          - backend:
+              serviceName: example-svc
+              servicePort: 8080
+            path: /
+      tls:
+      - hosts:
+        - test.example.com
+        secretName: test-example-com
+    ```
+
 - WIP: SSL/TLS test with wildcard cert
 
 ## Changes to be made before going into production
