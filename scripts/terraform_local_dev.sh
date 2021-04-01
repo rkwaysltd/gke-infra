@@ -35,6 +35,6 @@ TF_VAR_cloudflare_api_token="${CLOUDFLARE_API_TOKEN_DEV:-}"
 TF_VAR_letsencrypt_email="${LETSENCRYPT_EMAIL:-}"
 TF_VAR_cloudflare_api_email="${CLOUDFLARE_API_EMAIL:-}"
 TF_VAR_cloudflare_domain_list="${CLOUDFLARE_DOMAIN_LIST_DEV:-}"
-TF_VAR_cloudflare_domain_ingress_rr="${CLOUDFLARE_DOMAIN_INGRESS_RR:-}"
+TF_VAR_cloudflare_domain_ingress_rr="${CLOUDFLARE_DOMAIN_INGRESS_RR_DEV:-}"
 set +a
 terraform "$cmd" $opts "$@"

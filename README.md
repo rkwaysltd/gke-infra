@@ -204,7 +204,8 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
         | `CLOUDFLARE_API_EMAIL` | `cloudflare_api_email` | Cloudflare account email |
         | `CLOUDFLARE_DOMAIN_LIST_DEV` | `cloudflare_domain_list` | Comma separated list of domains managed by Cloudflare token (development domains) |
         | `CLOUDFLARE_DOMAIN_LIST_PROD` | `cloudflare_domain_list` | Comma separated list of domains managed by Cloudflare token (production domains) |
-        | `CLOUDFLARE_DOMAIN_INGRESS_RR` | `cloudflare_domain_ingress_rr` | Domain with A-type DNS resource record, one from the above list |
+        | `CLOUDFLARE_DOMAIN_INGRESS_RR_DEV` | `cloudflare_domain_ingress_rr` | Domain with A-type DNS resource record, one from the above list (development) |
+        | `CLOUDFLARE_DOMAIN_INGRESS_RR_PROD` | `cloudflare_domain_ingress_rr` | Domain with A-type DNS resource record, one from the above list (production) |
 
 1. FIXME: First run of Github actions when the clisters don't yet exists are going to fail tu to inter-provider depenency bugs in the project. Please configure terraform to run locally (see _Local machine usage_ below) and execute:
 
