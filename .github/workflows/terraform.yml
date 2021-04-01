@@ -20,6 +20,7 @@ jobs:
           tf_variables: "variables.dev.tfvars.json"
           tf_credentials: "GOOGLE_CREDENTIALS_DEV"
           tf_cloudflare_api_token: "CLOUDFLARE_API_TOKEN_DEV"
+          tf_cloudflare_domain_list: "CLOUDFLARE_DOMAIN_LIST_DEV"
         # prod cluster
         - name: Production
           branch: main-prod
@@ -27,6 +28,7 @@ jobs:
           tf_variables: "variables.prod.tfvars.json"
           tf_credentials: "GOOGLE_CREDENTIALS_PROD"
           tf_cloudflare_api_token: "CLOUDFLARE_API_TOKEN_PROD"
+          tf_cloudflare_domain_list: "CLOUDFLARE_DOMAIN_LIST_PROD"
     name: "Terraform - ${{ matrix.name }}"
 
     defaults:
@@ -122,7 +124,7 @@ jobs:
         TF_VAR_cloudflare_api_email: ${{ secrets.CLOUDFLARE_API_EMAIL }}
         TF_VAR_cloudflare_api_token: ${{ secrets[matrix.tf_cloudflare_api_token] }}
         TF_VAR_letsencrypt_email: ${{ secrets.LETSENCRYPT_EMAIL }}
-        TF_VAR_cloudflare_domain_list: ${{ secrets.CLOUDFLARE_DOMAIN_LIST }}
+        TF_VAR_cloudflare_domain_list: ${{ secrets[matrix.tf_cloudflare_domain_list] }}
         TF_VAR_cloudflare_domain_ingress_rr: ${{ secrets.CLOUDFLARE_DOMAIN_INGRESS_RR }}
       run: |
         terraform plan -out=tfplan -input=false -var-file="$TF_VARIABLES" -no-color
