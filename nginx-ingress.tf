@@ -49,12 +49,13 @@ resource "helm_release" "nginx_ingress" {
     templatefile(
       "${path.module}/chart-values/nginx-ingress-values.yaml.tmpl",
       {
-        project_id     = var.project_id
-        gfe_proxy_cird = var.load_balancing_gfe_proxy_cidr
+        project_id               = var.project_id
+        gfe_proxy_cird           = var.load_balancing_gfe_proxy_cidr
+        controller_namespace     = kubernetes_namespace.nginx_ingress.metadata[0].name
+        default_certificate_name = "nginx-ingress-certificate"
       }
     )
   ]
-
 }
 
 data "google_compute_network_endpoint_group" "nginx_ingress_80" {
@@ -199,4 +200,27 @@ resource "cloudflare_record" "nginx_ingress" {
   value   = (var.load_balancing_network_tier == "PREMIUM") ? google_compute_global_address.nginx_ingress_ip[0].address : google_compute_address.nginx_ingress_ip[0].address
   type    = "A"
   proxied = var.cloudflare_domain_ingress_proxied
+}
+
+resource "kubernetes_manifest" "nginx_ingress_certificate" {
+  provider = kubernetes-alpha
+  count    = (var.cloudflare_api_token == "" || var.cloudflare_domain_ingress_rr == "" ? 0 : 1)
+
+  manifest = {
+    apiVersion = "cert-manager.io/v1"
+    kind       = "Certificate"
+    metadata = {
+      name      = "nginx-ingress-certificate"
+      namespace = kubernetes_namespace.nginx_ingress.metadata[0].name
+    }
+    spec = {
+      secretName = "nginx-ingress-certificate"
+      commonName = (var.ingress_default_wildcard_certificate) ? "*.${var.cloudflare_domain_ingress_rr}" : "${var.ingress_rr_name}.${var.cloudflare_domain_ingress_rr}"
+      dnsNames   = (var.ingress_default_wildcard_certificate) ? ["*.${var.cloudflare_domain_ingress_rr}"] : ["${var.ingress_rr_name}.${var.cloudflare_domain_ingress_rr}"]
+      issuerRef = {
+        name = "letsencrypt-issuer"
+        kind = "ClusterIssuer"
+      }
+    }
+  }
 }
