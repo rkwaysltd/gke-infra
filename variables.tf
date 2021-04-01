@@ -23,6 +23,12 @@ variable "ingress_rr_name" {
   description = "The name of the ingress A-type resource record in DNS.."
 }
 
+variable "ingress_default_wildcard_certificate" {
+  type        = bool
+  description = "Enable wildcard certificate on ingress domain."
+  default     = true
+}
+
 variable "machine_type" {
   type        = string
   description = "Type of the node compute engines."
