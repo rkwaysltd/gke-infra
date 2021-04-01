@@ -77,8 +77,6 @@
         secretName: test-example-com
     ```
 
-- WIP: SSL/TLS test with wildcard cert
-
 ## Changes to be made before going into production
 
 This settings cannot be changed on existing cluster. Full cluster re-creation required.
