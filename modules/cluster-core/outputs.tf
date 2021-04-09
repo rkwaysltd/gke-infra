@@ -22,3 +22,8 @@ output "location" {
   description = "The location of the cluster."
   value       = module.gke.location
 }
+
+output "storageclass_cmek_disk_encryption_key" {
+  description = "The KMS key that should be used for PVs Encryption-at-Rest."
+  value       = google_kms_crypto_key.sc_storageclass_cmek_disk.self_link
+}
