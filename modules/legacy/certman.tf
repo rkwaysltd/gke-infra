@@ -26,7 +26,7 @@ resource "helm_release" "cert_manager" {
   }
 
   values = [
-    file("chart-values/certman-values.yaml")
+    file("${path.module}/chart-values/certman-values.yaml")
   ]
 }
 
