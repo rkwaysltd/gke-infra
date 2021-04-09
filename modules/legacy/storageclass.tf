@@ -10,7 +10,7 @@ module "gcloud_no_default_standard_storageclass" {
   kubectl_destroy_command = "kubectl annotate storageclass standard storageclass.kubernetes.io/is-default-class=true"
 
   module_depends_on = concat(
-    [data.google_client_config.default.access_token],
+    #[data.google_client_config.default.access_token],
     [module.gke.master_version],
   )
 }

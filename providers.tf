@@ -10,22 +10,22 @@ provider "google-beta" {
 
 provider "kubernetes" {
   load_config_file       = false
-  host                   = "https://${module.legacy.kubernetes_endpoint}"
-  token                  = module.legacy.client_token
-  cluster_ca_certificate = base64decode(module.legacy.ca_certificate)
+  host                   = "https://${module.cluster-core.kubernetes_endpoint}"
+  token                  = module.cluster-core.client_token
+  cluster_ca_certificate = base64decode(module.cluster-core.ca_certificate)
 }
 
 provider "kubernetes-alpha" {
-  host                   = "https://${module.legacy.kubernetes_endpoint}"
-  token                  = module.legacy.client_token
-  cluster_ca_certificate = base64decode(module.legacy.ca_certificate)
+  host                   = "https://${module.cluster-core.kubernetes_endpoint}"
+  token                  = module.cluster-core.client_token
+  cluster_ca_certificate = base64decode(module.cluster-core.ca_certificate)
 }
 
 provider "helm" {
   kubernetes {
-    host                   = "https://${module.legacy.kubernetes_endpoint}"
-    token                  = module.legacy.client_token
-    cluster_ca_certificate = base64decode(module.legacy.ca_certificate)
+    host                   = "https://${module.cluster-core.kubernetes_endpoint}"
+    token                  = module.cluster-core.client_token
+    cluster_ca_certificate = base64decode(module.cluster-core.ca_certificate)
   }
 }
 
