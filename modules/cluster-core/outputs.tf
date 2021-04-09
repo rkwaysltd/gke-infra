@@ -18,3 +18,7 @@ output "service_account" {
   value       = module.gke.service_account
 }
 
+output "location" {
+  description = "The location of the cluster."
+  value       = module.gke.location
+}
