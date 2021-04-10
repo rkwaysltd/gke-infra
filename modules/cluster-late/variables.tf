@@ -22,28 +22,35 @@ variable "cloudflare_api_token" {
   type        = string
   sensitive   = true
   description = "Cloudflare API token for cert-manager"
-  default     = ""
 }
 
 variable "letsencrypt_email" {
   type        = string
   description = "Let's Encrypt will use this to contact you about expiring certificates, and issues related to your account."
-  default     = ""
 }
 
 variable "cloudflare_api_email" {
   type        = string
   description = "Cloudflare API account for cert-manager"
-  default     = ""
 }
 
 variable "cloudflare_domain_list" {
   type        = string
   description = "Comma separated list of domains for Cloudflare API token to manage."
-  default     = ""
 }
 
 variable "logs_retention_days" {
   type        = number
   description = "Logs will be retained by default for this amount of time, after which they will automatically be deleted. The minimum retention period is 1 day."
+}
+
+# https://cloud.google.com/load-balancing/docs/tcp#load-balancer-behavior-in-network-service-tiers
+variable "load_balancing_network_tier" {
+  description = "Configuration for GKE/Nginx load balancing: Network Tier for traffic"
+  type        = string
+
+  validation {
+    condition     = can(regex("^(PREMIUM|STANDARD)$", var.load_balancing_network_tier))
+    error_message = "Must be PREMIUM or STANDARD."
+  }
 }
