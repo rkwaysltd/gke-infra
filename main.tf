@@ -50,6 +50,7 @@ module "cluster-late" {
   letsencrypt_email      = var.letsencrypt_email
   cloudflare_api_email   = var.cloudflare_api_email
   cloudflare_domain_list = var.cloudflare_domain_list
+  logs_retention_days    = var.logs_retention_days
 
   depends_on = [module.cluster-core]
 }

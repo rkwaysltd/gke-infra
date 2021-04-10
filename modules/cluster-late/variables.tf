@@ -42,3 +42,8 @@ variable "cloudflare_domain_list" {
   description = "Comma separated list of domains for Cloudflare API token to manage."
   default     = ""
 }
+
+variable "logs_retention_days" {
+  type        = number
+  description = "Logs will be retained by default for this amount of time, after which they will automatically be deleted. The minimum retention period is 1 day."
+}
