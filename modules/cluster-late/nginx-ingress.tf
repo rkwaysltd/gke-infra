@@ -6,7 +6,7 @@ resource "google_compute_global_address" "nginx_ingress_ip" {
 
   lifecycle {
     # change this to false if you need to switch network tier
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 
@@ -19,7 +19,7 @@ resource "google_compute_address" "nginx_ingress_ip" {
 
   lifecycle {
     # change this to false if you need to switch network tier
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 
