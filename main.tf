@@ -42,10 +42,14 @@ module "cluster-core" {
 module "cluster-late" {
   source = "./modules/cluster-late"
 
-  project_id          = var.project_id
-  name                = var.name
-  location            = module.cluster-core.location
-  disk_encryption_key = module.cluster-core.storageclass_cmek_disk_encryption_key
+  project_id             = var.project_id
+  name                   = var.name
+  location               = module.cluster-core.location
+  disk_encryption_key    = module.cluster-core.storageclass_cmek_disk_encryption_key
+  cloudflare_api_token   = var.cloudflare_api_token
+  letsencrypt_email      = var.letsencrypt_email
+  cloudflare_api_email   = var.cloudflare_api_email
+  cloudflare_domain_list = var.cloudflare_domain_list
 
   depends_on = [module.cluster-core]
 }
