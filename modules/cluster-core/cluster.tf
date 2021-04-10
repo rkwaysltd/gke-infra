@@ -44,10 +44,20 @@ module "gke" {
     },
   ]
 
+  # The set of Google API scopes to be made available on the node VMs under the "default" service account.
+  # The following scopes are recommended, but not required, and by default are not included:
+  #
+  #  https://www.googleapis.com/auth/compute is required for mounting persistent storage on your nodes. (FIXME: not true anymore?)
+  #  https://www.googleapis.com/auth/devstorage.read_only is required for communicating with gcr.io (the Google Container Registry).
+  #
+  # If unspecified, no scopes are added, unless Cloud Logging or Cloud Monitoring are enabled, in which case their required scopes will be added.
+  #
   node_pools_oauth_scopes = {
     all = []
 
     default-node-pool = [
+      # FIXME: https://github.com/rkwaysltd/gke-infra/issues/14
+      # Full access to all resources and services in the specified Google Cloud project.
       "https://www.googleapis.com/auth/cloud-platform",
     ]
   }
