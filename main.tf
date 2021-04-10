@@ -38,3 +38,14 @@ module "cluster-core" {
   disk_size_gb       = var.disk_size_gb
   initial_node_count = var.initial_node_count
 }
+
+module "cluster-late" {
+  source = "./modules/cluster-late"
+
+  project_id          = var.project_id
+  name                = var.name
+  location            = module.cluster-core.location
+  disk_encryption_key = module.cluster-core.storageclass_cmek_disk_encryption_key
+
+  depends_on = [module.cluster-core]
+}
