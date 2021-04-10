@@ -21,7 +21,7 @@ fi
 
 opts=
 case "${cmd}" in
-state|force-unlock|providers)
+state|force-unlock|providers|version)
     # no -var-file for state command
     ;;
 *)
