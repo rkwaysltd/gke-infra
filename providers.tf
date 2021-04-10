@@ -1,3 +1,41 @@
+terraform {
+  required_providers {
+
+    google = {
+      source = "hashicorp/google"
+      # Tested on 3.63.0, review required before switching to > 4.0.0
+      version = ">= 3.63.0, < 4.0.0"
+    }
+
+    google-beta = {
+      source = "hashicorp/google-beta"
+      # Tested on 3.63.0, review required before switching to > 4.0.0
+      version = ">= 3.63.0, < 4.0.0"
+    }
+
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 1.13.3"
+    }
+
+    kubernetes-alpha = {
+      source  = "hashicorp/kubernetes-alpha"
+      version = ">= 0.3.2"
+    }
+
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 2.0"
+    }
+
+    helm = {
+      source  = "hashicorp/helm"
+      version = ">= 2.1.0"
+    }
+
+  }
+}
+
 provider "google" {
   project = var.project_id
   region  = var.region
