@@ -3,16 +3,11 @@ module "gcloud_no_default_standard_storageclass" {
   version          = "~> 2.0.2"
   upgrade          = false
   project_id       = var.project_id
-  cluster_name     = module.gke.name
-  cluster_location = module.gke.location
+  cluster_name     = var.name
+  cluster_location = var.location
 
   kubectl_create_command  = "kubectl annotate storageclass standard storageclass.kubernetes.io/is-default-class-"
   kubectl_destroy_command = "kubectl annotate storageclass standard storageclass.kubernetes.io/is-default-class=true"
-
-  module_depends_on = concat(
-    [data.google_client_config.default.access_token],
-    [module.gke.master_version],
-  )
 }
 
 resource "kubernetes_storage_class" "standard_cmek" {
@@ -30,12 +25,11 @@ resource "kubernetes_storage_class" "standard_cmek" {
 
   parameters = {
     type                      = "pd-standard"
-    "disk-encryption-kms-key" = google_kms_crypto_key.sc_storageclass_cmek_disk.self_link
+    "disk-encryption-kms-key" = var.disk_encryption_key
   }
 
   depends_on = [
     module.gcloud_no_default_standard_storageclass.wait,
-    google_kms_crypto_key_iam_binding.crypto_key_sc_storageclass_cmek_disk
   ]
 }
 
@@ -51,12 +45,8 @@ resource "kubernetes_storage_class" "premium_rwo_cmek" {
 
   parameters = {
     type                      = "pd-ssd"
-    "disk-encryption-kms-key" = google_kms_crypto_key.sc_storageclass_cmek_disk.self_link
+    "disk-encryption-kms-key" = var.disk_encryption_key
   }
-
-  depends_on = [
-    google_kms_crypto_key_iam_binding.crypto_key_sc_storageclass_cmek_disk
-  ]
 }
 
 resource "kubernetes_storage_class" "standard_rwo_cmek" {
@@ -71,10 +61,6 @@ resource "kubernetes_storage_class" "standard_rwo_cmek" {
 
   parameters = {
     type                      = "pd-balanced"
-    "disk-encryption-kms-key" = google_kms_crypto_key.sc_storageclass_cmek_disk.self_link
+    "disk-encryption-kms-key" = var.disk_encryption_key
   }
-
-  depends_on = [
-    google_kms_crypto_key_iam_binding.crypto_key_sc_storageclass_cmek_disk
-  ]
 }
