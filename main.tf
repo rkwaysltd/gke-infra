@@ -23,6 +23,11 @@
 module "cluster-core" {
   source = "./modules/cluster-core"
 
+  providers = {
+    # prevent cycles by using special provider
+    kubernetes = kubernetes.kubernetes-core
+  }
+
   project_id         = var.project_id
   name               = var.name
   region             = var.region
