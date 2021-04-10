@@ -83,5 +83,5 @@ resource "kubernetes_manifest" "cert_manager_cf_issuer" {
   }
 
   count = (var.cloudflare_api_email == "" || var.letsencrypt_email == "" || var.cloudflare_domain_list == "" ? 0 : 1)
-  #FIXME: depend_on ...
+  depends_on = [helm_release.cert_manager]
 }
