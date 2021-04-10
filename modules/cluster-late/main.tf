@@ -17,5 +17,10 @@ terraform {
       version = ">= 0.3.2"
     }
 
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 2.0"
+    }
+
   }
 }

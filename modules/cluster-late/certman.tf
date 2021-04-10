@@ -71,10 +71,7 @@ resource "kubernetes_manifest" "cert_manager_cf_issuer" {
               }
             }
             selector = {
-              dnsZones = [
-                for domain in split(",", var.cloudflare_domain_list) :
-                trimspace(domain)
-              ]
+              dnsZones = local.cloudflare_domain_list
             }
           }
         ]
@@ -82,6 +79,6 @@ resource "kubernetes_manifest" "cert_manager_cf_issuer" {
     }
   }
 
-  count = (var.cloudflare_api_email == "" || var.letsencrypt_email == "" || var.cloudflare_domain_list == "" ? 0 : 1)
+  count      = (var.cloudflare_api_email == "" || var.letsencrypt_email == "" || var.cloudflare_domain_list == "" ? 0 : 1)
   depends_on = [helm_release.cert_manager]
 }

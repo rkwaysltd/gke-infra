@@ -89,6 +89,10 @@ resource "google_compute_health_check" "nginx_ingress_443_health_check" {
   }
 }
 
+data "google_compute_network" "default" {
+  name = "default"
+}
+
 resource "google_compute_firewall" "nginx_ingress_health_check" {
   name      = "nginx-ingress-health-check"
   network   = data.google_compute_network.default.id
@@ -223,4 +227,6 @@ resource "kubernetes_manifest" "nginx_ingress_certificate" {
       }
     }
   }
+
+  depends_on = [helm_release.cert_manager]
 }

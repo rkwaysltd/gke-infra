@@ -1,25 +1,3 @@
-#module "legacy" {
-#  source = "./modules/legacy"
-#
-#  project_id                                  = var.project_id
-#  name                                        = var.name
-#  region                                      = var.region
-#  zones                                       = var.zones
-#  machine_type                                = var.machine_type
-#  min_count                                   = var.min_count
-#  max_count                                   = var.max_count
-#  disk_size_gb                                = var.disk_size_gb
-#  initial_node_count                          = var.initial_node_count
-#  logs_retention_days                         = var.logs_retention_days
-#  ingress_rr_name                             = var.ingress_rr_name
-#  load_balancing_max_connections_per_endpoint = var.load_balancing_max_connections_per_endpoint
-#  cloudflare_api_token                        = var.cloudflare_api_token
-#  letsencrypt_email                           = var.letsencrypt_email
-#  cloudflare_api_email                        = var.cloudflare_api_email
-#  cloudflare_domain_list                      = var.cloudflare_domain_list
-#  cloudflare_domain_ingress_rr                = var.cloudflare_domain_ingress_rr
-#}
-
 module "cluster-core" {
   source = "./modules/cluster-core"
 
@@ -42,15 +20,24 @@ module "cluster-core" {
 module "cluster-late" {
   source = "./modules/cluster-late"
 
-  project_id             = var.project_id
-  name                   = var.name
-  location               = module.cluster-core.location
-  disk_encryption_key    = module.cluster-core.storageclass_cmek_disk_encryption_key
-  cloudflare_api_token   = var.cloudflare_api_token
-  letsencrypt_email      = var.letsencrypt_email
-  cloudflare_api_email   = var.cloudflare_api_email
-  cloudflare_domain_list = var.cloudflare_domain_list
-  logs_retention_days    = var.logs_retention_days
+  project_id                                  = var.project_id
+  name                                        = var.name
+  zones                                       = var.zones
+  location                                    = module.cluster-core.location
+  disk_encryption_key                         = module.cluster-core.storageclass_cmek_disk_encryption_key
+  cloudflare_api_token                        = var.cloudflare_api_token
+  letsencrypt_email                           = var.letsencrypt_email
+  cloudflare_api_email                        = var.cloudflare_api_email
+  cloudflare_domain_list                      = var.cloudflare_domain_list
+  logs_retention_days                         = var.logs_retention_days
+  load_balancing_network_tier                 = var.load_balancing_network_tier
+  load_balancing_gfe_proxy_cidr               = var.load_balancing_gfe_proxy_cidr
+  load_balancing_health_check_cidr            = var.load_balancing_health_check_cidr
+  load_balancing_max_connections_per_endpoint = var.load_balancing_max_connections_per_endpoint
+  cloudflare_domain_ingress_rr                = var.cloudflare_domain_ingress_rr
+  ingress_rr_name                             = var.ingress_rr_name
+  cloudflare_domain_ingress_proxied           = var.cloudflare_domain_ingress_proxied
+  ingress_default_wildcard_certificate        = var.ingress_default_wildcard_certificate
 
   depends_on = [module.cluster-core]
 }
