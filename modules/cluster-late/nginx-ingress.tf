@@ -23,46 +23,22 @@ resource "google_compute_address" "nginx_ingress_ip" {
   }
 }
 
-resource "kubernetes_namespace" "nginx_ingress" {
-  metadata {
-    annotations = {
-      name = "nginx-ingress"
-    }
-
-    labels = {
-      name = "nginx-ingress"
-    }
-
-    name = "nginx-ingress"
-  }
-}
-
-resource "helm_release" "nginx_ingress" {
-  name       = "nginx-ingress"
-  repository = "https://kubernetes.github.io/ingress-nginx"
-  chart      = "ingress-nginx"
-  version    = "3.24.0"
-  namespace  = kubernetes_namespace.nginx_ingress.metadata[0].name
-  skip_crds  = false
-
-  values = [
-    templatefile(
-      "${path.module}/chart-values/nginx-ingress-values.yaml.tmpl",
-      {
-        project_id               = var.project_id
-        gfe_proxy_cird           = var.load_balancing_gfe_proxy_cidr
-        controller_namespace     = kubernetes_namespace.nginx_ingress.metadata[0].name
-        default_certificate_name = "nginx-ingress-certificate"
-      }
-    )
-  ]
-}
+# FIXME: check if really needed
+#data "kubernetes_service" "nginx_ingress" {
+#  metadata {
+#    name = "nginx-ingress-ingress-nginx-controller"
+#    namespace = var.nginx_ingress_namespace
+#  }
+#}
 
 data "google_compute_network_endpoint_group" "nginx_ingress_80" {
   for_each = toset(var.zones)
 
   name = "${var.project_id}-nginx-ingress-80"
   zone = each.value
+
+  # FIXME: check if really needed
+  #depends_on = [data.kubernetes_service.nginx_ingress]
 }
 
 data "google_compute_network_endpoint_group" "nginx_ingress_443" {
@@ -70,6 +46,9 @@ data "google_compute_network_endpoint_group" "nginx_ingress_443" {
 
   name = "${var.project_id}-nginx-ingress-443"
   zone = each.value
+
+  # FIXME: check if really needed
+  #depends_on = [data.kubernetes_service.nginx_ingress]
 }
 
 resource "google_compute_health_check" "nginx_ingress_443_health_check" {
@@ -215,7 +194,7 @@ resource "kubernetes_manifest" "nginx_ingress_certificate" {
     kind       = "Certificate"
     metadata = {
       name      = "nginx-ingress-certificate"
-      namespace = kubernetes_namespace.nginx_ingress.metadata[0].name
+      namespace = var.nginx_ingress_namespace
     }
     spec = {
       secretName = "nginx-ingress-certificate"
@@ -227,6 +206,4 @@ resource "kubernetes_manifest" "nginx_ingress_certificate" {
       }
     }
   }
-
-  depends_on = [helm_release.cert_manager]
 }
