@@ -50,4 +50,5 @@ module "cluster-late" {
   ingress_default_wildcard_certificate        = var.ingress_default_wildcard_certificate
 
   depends_on = [module.cluster-core, module.cluster-mid]
+  count      = (var.terraform_preflight) ? 0 : 1
 }
