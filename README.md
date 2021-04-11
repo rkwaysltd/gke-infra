@@ -167,7 +167,7 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
         - Google Cloud project names in the `project_id` field
         - Kubernetes cluster names in the `name` field
 
-    - run login script with your Google Cloud project owner account id as argument, copy displayed links into browser and follow instructions:
+    - run login script with _your Google Cloud project owner account id as argument_, copy displayed links into browser and follow instructions:
 
         ```bash
         ./preflight/login.sh owner.email.account@gmail.com
@@ -205,18 +205,20 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
         | `CLOUDFLARE_DOMAIN_INGRESS_RR_DEV` | `cloudflare_domain_ingress_rr` | Domain with A-type DNS resource record, one from the above list (development) |
         | `CLOUDFLARE_DOMAIN_INGRESS_RR_PROD` | `cloudflare_domain_ingress_rr` | Domain with A-type DNS resource record, one from the above list (production) |
 
-## Scratchpad
+## Local machine `kubectl`
+
+After creation of a cluster:
 
 ```sh
 gcloud container clusters list
-gcloud container clusters get-credentials gke-cluster
+gcloud container clusters get-credentials CLUSTER_NAME --location CLUSTER_LOCATION
 ```
 
-## Local machine usage
+## Local machine `terraform`
 
 Issuing commands from local machine should only be considered in the cluster development stage and never to production cluster.
 
-- update `./secrets` file based on `./secrets.example`
+- update `./.secrets` file based on `./.secrets.example`
 - run `./scripts/terraform_local_dev.sh init`
 - run `./scripts/terraform_local_dev.sh plan` and possibly `./scripts/terraform_local_dev.sh apply`
 
