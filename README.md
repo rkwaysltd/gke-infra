@@ -107,6 +107,8 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
 
 1. Fork this project on Github, set branch `main-prod` as protected.
 
+1. Make sure that the variable `terraform_preflight` is set to `true` in `variables.dev.tfvars.json` and `variables.prod.tfvars.json`.
+
 1. Create master project in [Google Cloud console](https://console.cloud.google.com/cloud-resource-manager). Highly confidential Terraform state will be kept in a GCS bucket in that project.
 
     - add gcloud `gke-infra-master` configuration (please change `owner.email.account@gmail.com` to correct address)
@@ -204,6 +206,14 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
         | `CLOUDFLARE_DOMAIN_LIST_PROD` | `cloudflare_domain_list` | Comma separated list of domains managed by Cloudflare token (production domains) |
         | `CLOUDFLARE_DOMAIN_INGRESS_RR_DEV` | `cloudflare_domain_ingress_rr` | Domain with A-type DNS resource record, one from the above list (development) |
         | `CLOUDFLARE_DOMAIN_INGRESS_RR_PROD` | `cloudflare_domain_ingress_rr` | Domain with A-type DNS resource record, one from the above list (production) |
+
+1. Do a `git push` to the `main` branch of your project. That should create GKE cluster with some resources in it (and install all the CRDs in Kubernetes).
+
+1. Set `terraform_preflight` to false in `variables.dev.tfvars.json` and do another git push. That should create rest of the resources.
+
+1. Git push to the `main-prod` branch.
+
+1. Set `terraform_preflight` to false in `variables.prod.tfvars.json` and again a `git push`.
 
 ## Local machine `kubectl`
 
