@@ -23,6 +23,16 @@ variable "disk_encryption_key" {
   description = "The KMS key to encrypt PVs in all StorageClasses (as google_kms_crypto_key.x.self_link)."
 }
 
+variable "cert_manager_namespace" {
+  type        = string
+  description = "The name of Namespace with Cert Manager."
+}
+
+variable "nginx_ingress_namespace" {
+  type        = string
+  description = "The name of Namespace with Nginx Ingress Controller."
+}
+
 variable "cloudflare_api_token" {
   type        = string
   sensitive   = true
@@ -62,12 +72,6 @@ variable "load_balancing_network_tier" {
     condition     = can(regex("^(PREMIUM|STANDARD)$", var.load_balancing_network_tier))
     error_message = "Must be PREMIUM or STANDARD."
   }
-}
-
-# https://cloud.google.com/load-balancing/docs/tcp#firewall_rules
-variable "load_balancing_gfe_proxy_cidr" {
-  description = "Configuration for GKE/Nginx load balancing: source IPs for Google Front End (GFE) proxies"
-  type        = list(string)
 }
 
 # https://cloud.google.com/load-balancing/docs/tcp#firewall_rules

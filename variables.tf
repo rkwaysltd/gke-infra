@@ -1,3 +1,9 @@
+variable "terraform_preflight" {
+  type        = bool
+  description = "Tells Terraform to skip cluster-late module. This module needs working cluster to operate."
+  default     = false
+}
+
 variable "project_id" {
   type        = string
   description = "The project ID to host the cluster in."
