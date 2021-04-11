@@ -1,3 +1,9 @@
+variable "terraform_preflight" {
+  type        = bool
+  description = "Tells Terraform to skip cluster-late module. This module needs working cluster to operate."
+  default     = false
+}
+
 variable "project_id" {
   type        = string
   description = "The project ID to host the cluster in."
@@ -21,6 +27,12 @@ variable "name" {
 variable "ingress_rr_name" {
   type        = string
   description = "The name of the ingress A-type resource record in DNS.."
+}
+
+variable "ingress_default_wildcard_certificate" {
+  type        = bool
+  description = "Enable wildcard certificate on ingress domain."
+  default     = true
 }
 
 variable "machine_type" {

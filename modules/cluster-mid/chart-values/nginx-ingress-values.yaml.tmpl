@@ -10,5 +10,7 @@ controller:
     type: ClusterIP
     annotations:
       cloud.google.com/neg: '{"exposed_ports": {"80":{"name": "${project_id}-nginx-ingress-80"},"443":{"name": "${project_id}-nginx-ingress-443"}}}'
+  extraArgs:
+    default-ssl-certificate: "${controller_namespace}/${default_certificate_name}"
 
 # vim: filetype=yaml

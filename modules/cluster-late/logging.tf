@@ -17,12 +17,12 @@ resource "google_logging_project_bucket_config" "cert_manager" {
 resource "google_logging_project_sink" "cert_manager" {
   name                   = "cert-manager"
   destination            = "logging.googleapis.com/${google_logging_project_bucket_config.cert_manager.id}"
-  filter                 = "resource.type = k8s_container resource.labels.namespace_name=\"${kubernetes_namespace.cert_manager.metadata[0].name}\" "
+  filter                 = "resource.type = k8s_container resource.labels.namespace_name=\"${var.cert_manager_namespace}\" "
   unique_writer_identity = true
 }
 
 resource "google_logging_project_exclusion" "cert_manager" {
   name        = "cert-manager"
   description = "Exclude cert-manager namespace logs. Stored elsewhere."
-  filter      = "resource.type = k8s_container resource.labels.namespace_name=\"${kubernetes_namespace.cert_manager.metadata[0].name}\" "
+  filter      = "resource.type = k8s_container resource.labels.namespace_name=\"${var.cert_manager_namespace}\" "
 }
