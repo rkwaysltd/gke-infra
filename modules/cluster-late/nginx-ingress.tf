@@ -23,22 +23,11 @@ resource "google_compute_address" "nginx_ingress_ip" {
   }
 }
 
-# FIXME: check if really needed
-#data "kubernetes_service" "nginx_ingress" {
-#  metadata {
-#    name = "nginx-ingress-ingress-nginx-controller"
-#    namespace = var.nginx_ingress_namespace
-#  }
-#}
-
 data "google_compute_network_endpoint_group" "nginx_ingress_80" {
   for_each = toset(var.zones)
 
   name = "${var.project_id}-nginx-ingress-80"
   zone = each.value
-
-  # FIXME: check if really needed
-  #depends_on = [data.kubernetes_service.nginx_ingress]
 }
 
 data "google_compute_network_endpoint_group" "nginx_ingress_443" {
@@ -46,9 +35,6 @@ data "google_compute_network_endpoint_group" "nginx_ingress_443" {
 
   name = "${var.project_id}-nginx-ingress-443"
   zone = each.value
-
-  # FIXME: check if really needed
-  #depends_on = [data.kubernetes_service.nginx_ingress]
 }
 
 resource "google_compute_health_check" "nginx_ingress_443_health_check" {
