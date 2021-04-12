@@ -1,5 +1,7 @@
 module "gke" {
-  source                     = "github.com/rkwaysltd/terraform-google-kubernetes-engine?ref=gke-infra/modules/beta-public-cluster"
+  source                     = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
+  version = "14.1.0"
+
   project_id                 = var.project_id
   regional                   = (length(var.zones) > 1) ? true : false
   region                     = var.region
