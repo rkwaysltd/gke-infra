@@ -46,13 +46,26 @@ if [ "${cmd}" = "init" ]; then
     TF_WORKSPACE=""
 fi
 
-opts=
+# handle ./terraform_target special case
+if [ -e "${D}/../terraform_target" ]; then
+    case "$(cat "${D}/../terraform_target")" in
+        *cluster-core*) opts="-target=module.cluster-core";;
+        *cluster-mid*) opts="-target=module.cluster-mid";;
+        *cluster-late*) opts="-target=module.cluster-late";;
+        "") opts=;;
+        *)
+            echo >&2 "Unknown state in ${D}/../terraform_targe file [cluster-core|cluster-mid|cluster-late]."
+            exit 1
+            ;;
+    esac
+fi
+
 case "${cmd}" in
 state|force-unlock|providers|version)
     # no -var-file for some command
     ;;
 *)
-    opts="-var-file=$VARS_FILE"
+    opts="$opts -var-file=$VARS_FILE"
 esac
 
 export \
