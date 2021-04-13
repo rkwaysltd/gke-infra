@@ -113,6 +113,24 @@ jobs:
       run: |
         terraform validate -no-color
 
+    - name: Terraform Target Selection
+      id: target
+      run: |
+        tgt=
+        if [ -e ./terraform_target ]; then
+            case "$(cat ./terraform_target)" in
+                *cluster-core*) tgt="-target=module.cluster-core";;
+                *cluster-mid*) tgt="-target=module.cluster-mid";;
+                *cluster-late*) tgt="-target=module.cluster-late";;
+                "") ;;
+                *)
+                    echo >&2 "Unknown state in ./terraform_targe file. Should be empty or contain [cluster-core|cluster-mid|cluster-late]."
+                    exit 1
+                    ;;
+            esac
+        fi
+        echo "::set-output name=OPTION::${tgt}"
+
     - name: Terraform Plan
       if: |
         (github.event_name == 'push' && github.ref == format('refs/heads/{0}', matrix.branch)) ||
@@ -123,13 +141,14 @@ jobs:
         GOOGLE_ENCRYPTION_KEY: ${{ secrets.GOOGLE_ENCRYPTION_KEY }}
         GOOGLE_CREDENTIALS: ${{ secrets[matrix.tf_credentials] }}
         EVENT_NAME: ${{ github.event_name }}
+        OPT_TARGET: ${{ steps.target.outputs.OPTION }}
         TF_VAR_cloudflare_api_email: ${{ secrets.CLOUDFLARE_API_EMAIL }}
         TF_VAR_cloudflare_api_token: ${{ secrets[matrix.tf_cloudflare_api_token] }}
         TF_VAR_letsencrypt_email: ${{ secrets.LETSENCRYPT_EMAIL }}
         TF_VAR_cloudflare_domain_list: ${{ secrets[matrix.tf_cloudflare_domain_list] }}
         TF_VAR_cloudflare_domain_ingress_rr: ${{ secrets[matrix.tf_cloudflare_domain_ingress_rr] }}
       run: |
-        terraform plan -out=tfplan -input=false -var-file="$TF_VARIABLES" -no-color
+        terraform plan -out=tfplan -input=false -var-file="$TF_VARIABLES" -no-color $OPT_TARGET
 
     - name: Append plan to PR
       uses: actions/github-script@0.9.0
