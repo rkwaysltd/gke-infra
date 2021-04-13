@@ -215,6 +215,18 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
 
 1. Set `terraform_preflight` to false in `variables.prod.tfvars.json` and again a `git push`.
 
+## Issues
+
+In some cases like e.g. replacing default node pool in cluster the provider configuration from `cluster-core` module might not be properly propagated into `cluster-mid` and `cluster-late` modules. The problem manifests by e.g. kubernets provider trying to reach our cluster on `localhost` URLs. In such cases please try to push a commit with `cluster-core` string in `terraform_target` file.
+
+```bash
+echo "cluster-core" > terraform_target
+git commit terraform_target -m "Only cluster-core module for now"
+git push
+```
+
+After applying the changes (PR merge) try to remove file content in another PR - carefully check the generated plan for any unexpected changes.
+
 ## Local machine `kubectl`
 
 After creation of a cluster:

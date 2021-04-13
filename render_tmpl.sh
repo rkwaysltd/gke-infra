@@ -1,10 +1,11 @@
 #!/bin/sh
+D=$(dirname $0)
 
-if [ -e ./.secrets ]; then
-    . .secrets
+if [ -e "${D}/.secrets" ]; then
+    . "${D}/.secrets"
 fi
 
 : ${PROJECT_ID:?}
 : ${TF_STATE_BUCKET:?}
 
-envsubst < ./state.tf.tmpl > ./state.tf
+envsubst < "$D/state.tf.tmpl" > "$D/state.tf"
