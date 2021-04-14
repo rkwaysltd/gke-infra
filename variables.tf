@@ -67,19 +67,34 @@ variable "initial_node_count" {
 
 variable "logs_retention_days" {
   type        = number
-  description = "Logs will be retained by default for this amount of time, after which they will automatically be deleted. The minimum retention period is 1 day."
+  description = "Logs will be retained by default for this amount of time, after which they will automatically be deleted."
+
+  validation {
+    condition     = var.logs_retention_days > 0
+    error_message = "The minimum retention period is 1 day."
+  }
 }
 
 variable "logs_retention_days_cert_manager" {
   type        = number
-  description = "Logs retention for cert-manager namespace in days. The minimum retention period is 1 day."
+  description = "Logs retention for cert-manager namespace in days."
   default     = 30
+
+  validation {
+    condition     = var.logs_retention_days_cert_manager > 0
+    error_message = "The minimum retention period is 1 day."
+  }
 }
 
 variable "logs_retention_days_nginx_ingress" {
   type        = number
-  description = "Logs retention for nginx-ingress namespace in days. The minimum retention period is 1 day."
+  description = "Logs retention for nginx-ingress namespace in days."
   default     = 30
+
+  validation {
+    condition     = var.logs_retention_days_nginx_ingress > 0
+    error_message = "The minimum retention period is 1 day."
+  }
 }
 
 variable "letsencrypt_email" {
