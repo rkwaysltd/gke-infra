@@ -63,6 +63,11 @@ variable "logs_retention_days" {
   description = "Logs will be retained by default for this amount of time, after which they will automatically be deleted. The minimum retention period is 1 day."
 }
 
+variable "logs_retention_days_cert_manager" {
+  type        = number
+  description = "Logs retention for cert-manager namespace in days. The minimum retention period is 1 day."
+}
+
 # https://cloud.google.com/load-balancing/docs/tcp#load-balancer-behavior-in-network-service-tiers
 variable "load_balancing_network_tier" {
   description = "Configuration for GKE/Nginx load balancing: Network Tier for traffic"

@@ -65,6 +65,12 @@ variable "logs_retention_days" {
   description = "Logs will be retained by default for this amount of time, after which they will automatically be deleted. The minimum retention period is 1 day."
 }
 
+variable "logs_retention_days_cert_manager" {
+  type        = number
+  description = "Logs retention for cert-manager namespace in days. The minimum retention period is 1 day."
+  default     = 30
+}
+
 variable "letsencrypt_email" {
   type        = string
   description = "Let's Encrypt will use this to contact you about expiring certificates, and issues related to your account."

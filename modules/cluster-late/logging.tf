@@ -6,11 +6,11 @@ resource "google_logging_project_bucket_config" "default" {
   bucket_id      = "_Default"
 }
 
-# Example: cert-manager logs (keep for 30 days)
+# cert-manager logs
 resource "google_logging_project_bucket_config" "cert_manager" {
   project        = var.project_id
   location       = "global"
-  retention_days = 30
+  retention_days = var.logs_retention_days_cert_manager
   bucket_id      = "cert-manager"
 }
 
