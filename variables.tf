@@ -67,11 +67,23 @@ variable "initial_node_count" {
 
 variable "logs_retention_days" {
   type        = number
-  description = "Logs will be retained by default for this amount of time, after which they will automatically be deleted."
+  description = "Logs will be retained by default for this amount of time (in days), after which they will automatically be deleted."
+  default     = 14
 
   validation {
     condition     = var.logs_retention_days > 0
     error_message = "The minimum retention period is 1 day."
+  }
+}
+
+variable "logs_retention_bylabel_buckets" {
+  type        = string
+  description = "Comma separated list of numbers configuring per Pod-label logs retention (in days)."
+  default     = "7,14,30,60,90"
+
+  validation {
+    condition     = alltrue([for x in split(",", var.logs_retention_bylabel_buckets) : try(tonumber(trimspace(x)), 0) > 0])
+    error_message = "This should be a comma-separated list of numbers [>0]."
   }
 }
 

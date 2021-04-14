@@ -77,6 +77,34 @@
         secretName: test-example-com
     ```
 
+### Logging
+
+The GKE cluster is configured to use [Cloud Logging](https://cloud.google.com/logging).
+
+The [Cert Manager](https://cert-manager.io/) and [Nginx Ingress Controller](https://kubernetes.github.io/ingress-nginx/) logs are sent to pre-configured buckets from all the Pods in that Kubernetes Namespace.
+
+Applications deployed to cluster can use Pod labels to pick proper log retention bucket. See shortened example below or [full example](./examples/logging.yaml). Please remember that label value on the right side should be a string - enclosing it in `""` characters is very much needed. Values other than specified in `logs_retention_bylabel_buckets` Terraform variable are silently ignored.
+
+```yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  ...
+spec:
+  ...
+  template:
+    metadata:
+      labels:
+        ...
+        rkways.com/gke-infra-logdays: "7"
+      ...
+```
+
+All logs not covered by above rules will go into the default bucket.
+
+The [Cloud Logging](https://cloud.google.com/logging) subsystem currently don't support Customer Managed Encryption Keys for stored logs. If that's a requirement there is a way to send logs via CMEK-enabled [Cloud Logging Router](https://cloud.google.com/logging/docs/routing/managed-encryption) into [a destination that supports CMEK](https://cloud.google.com/logging/docs/routing/managed-encryption#exports).
+
 ## Changes to be made before going into production
 
 This settings cannot be changed on existing cluster. Full cluster re-creation required.
@@ -214,6 +242,17 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
 1. Git push to the `main-prod` branch.
 
 1. Set `terraform_preflight` to false in `variables.prod.tfvars.json` and again a `git push`.
+
+## More configuration variables
+
+### Logging
+
+    | Terraform variable | Description | Default Value |
+    |--------------------|-------------|---------------|
+    | `logs_retention_days` | Default logs retention [days] | 14 |
+    | `logs_retention_days_cert_manager` | Logs retention for Pods in `cert-manager` namespace [days] | 30 |
+    | `logs_retention_days_nginx_ingress` | Logs retention for Pods in `nginx-ingress` namespace [days] | 30 |
+    | `logs_retention_bylabel_buckets` | Comma separated list of numbers configuring per Pod-label logs retention [days] | 7,14,30,60,90 |
 
 ## Issues
 

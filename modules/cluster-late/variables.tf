@@ -73,6 +73,20 @@ variable "logs_retention_days" {
   }
 }
 
+variable "logs_retention_bylabel_buckets" {
+  type        = string
+  description = "Comma separated list of numbers configuring per Pod-label logs retention (in days)."
+
+  validation {
+    condition     = alltrue([for x in split(",", var.logs_retention_bylabel_buckets) : try(tonumber(trimspace(x)), 0) > 0])
+    error_message = "This should be a comma-separated list of numbers [>0]."
+  }
+}
+
+locals {
+  logs_retention_bylabel_buckets = [for x in split(",", var.logs_retention_bylabel_buckets) :trimspace(x)]
+}
+
 variable "logs_retention_days_cert_manager" {
   type        = number
   description = "Logs retention for cert-manager namespace in days."
