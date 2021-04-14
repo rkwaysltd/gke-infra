@@ -22,6 +22,11 @@ variable "zones" {
 variable "name" {
   type        = string
   description = "The name of the cluster."
+
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9-]*$", var.name))
+    error_message = "The cluster name should only contain A-Z, a-z, 0-9 and '-' character. Cannot start with '-'."
+  }
 }
 
 variable "ingress_rr_name" {
