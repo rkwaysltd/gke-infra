@@ -47,7 +47,7 @@
         kubernetes.io/ingress.class: "ngx"
     ```
 
-- While it's possible to set `PREMIUM` or `STANDARD` Network Tier changes on existing cluster needs to be carefully consiered as the entry IP address is going to change.
+- While it's possible to set `PREMIUM` or `STANDARD` Network Tier changes on existing cluster needs to be carefully considered as the entry IP address is going to change.
 
 - Ingress IP address will be placed in DNS as `<ingress_rr_name>.<configured_domain_name>`, other domain names can use `CNAME` records to point to it.
 
@@ -105,7 +105,7 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
 
 ## Preflight one-time setup
 
-1. Fork this project on Github, set branch `main-prod` as protected.
+1. Fork this project on GitHub, set branch `main-prod` as protected.
 
 1. Make sure that the variable `terraform_preflight` is set to `true` in `variables.dev.tfvars.json` and `variables.prod.tfvars.json`.
 
@@ -217,7 +217,7 @@ The cluster must have at least 2 nodes of type e2-medium or higher. The recommen
 
 ## Issues
 
-In some cases like e.g. replacing default node pool in cluster the provider configuration from `cluster-core` module might not be properly propagated into `cluster-mid` and `cluster-late` modules. The problem manifests by e.g. kubernets provider trying to reach our cluster on `localhost` URLs. In such cases please try to push a commit with `cluster-core` string in `terraform_target` file.
+In some cases like e.g. replacing default node pool in cluster the provider configuration from `cluster-core` module might not be properly propagated into `cluster-mid` and `cluster-late` modules. The problem manifests itself by e.g. kubernetes provider trying to reach our cluster on `localhost` URLs. In such cases please try to push a commit with `cluster-core` string in `terraform_target` file.
 
 ```bash
 echo "cluster-core" > terraform_target
@@ -233,7 +233,10 @@ After creation of a cluster:
 
 ```sh
 gcloud container clusters list
-gcloud container clusters get-credentials CLUSTER_NAME --location CLUSTER_LOCATION
+# for zonal clusters
+gcloud container clusters get-credentials CLUSTER_NAME --zone CLUSTER_ZONE
+# or for regional clusters
+gcloud container clusters get-credentials CLUSTER_NAME --region CLUSTER_REGION
 ```
 
 ## Local machine `terraform`
