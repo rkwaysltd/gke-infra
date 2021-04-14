@@ -6,6 +6,11 @@ variable "project_id" {
 variable "name" {
   type        = string
   description = "The name of the cluster."
+
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9-]*$", var.name))
+    error_message = "The cluster name should only contain A-Z, a-z, 0-9 and '-' character. Cannot start with '-'."
+  }
 }
 
 variable "zones" {
@@ -66,6 +71,11 @@ variable "logs_retention_days" {
 variable "logs_retention_days_cert_manager" {
   type        = number
   description = "Logs retention for cert-manager namespace in days. The minimum retention period is 1 day."
+}
+
+variable "logs_retention_days_nginx_ingress" {
+  type        = number
+  description = "Logs retention for nginx-ingress namespace in days. The minimum retention period is 1 day."
 }
 
 # https://cloud.google.com/load-balancing/docs/tcp#load-balancer-behavior-in-network-service-tiers

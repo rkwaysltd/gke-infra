@@ -76,6 +76,12 @@ variable "logs_retention_days_cert_manager" {
   default     = 30
 }
 
+variable "logs_retention_days_nginx_ingress" {
+  type        = number
+  description = "Logs retention for nginx-ingress namespace in days. The minimum retention period is 1 day."
+  default     = 30
+}
+
 variable "letsencrypt_email" {
   type        = string
   description = "Let's Encrypt will use this to contact you about expiring certificates, and issues related to your account."

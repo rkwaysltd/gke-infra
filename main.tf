@@ -42,6 +42,7 @@ module "cluster-late" {
   cloudflare_domain_list                      = var.cloudflare_domain_list
   logs_retention_days                         = var.logs_retention_days
   logs_retention_days_cert_manager            = var.logs_retention_days_cert_manager
+  logs_retention_days_nginx_ingress           = var.logs_retention_days_nginx_ingress
   load_balancing_network_tier                 = var.load_balancing_network_tier
   load_balancing_health_check_cidr            = var.load_balancing_health_check_cidr
   load_balancing_max_connections_per_endpoint = var.load_balancing_max_connections_per_endpoint
