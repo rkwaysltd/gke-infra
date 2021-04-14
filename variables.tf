@@ -22,6 +22,11 @@ variable "zones" {
 variable "name" {
   type        = string
   description = "The name of the cluster."
+
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9-]*$", var.name))
+    error_message = "The cluster name should only contain A-Z, a-z, 0-9 and '-' character. Cannot start with '-'."
+  }
 }
 
 variable "ingress_rr_name" {
@@ -62,7 +67,46 @@ variable "initial_node_count" {
 
 variable "logs_retention_days" {
   type        = number
-  description = "Logs will be retained by default for this amount of time, after which they will automatically be deleted. The minimum retention period is 1 day."
+  description = "Logs will be retained by default for this amount of time (in days), after which they will automatically be deleted."
+  default     = 14
+
+  validation {
+    condition     = var.logs_retention_days > 0
+    error_message = "The minimum retention period is 1 day."
+  }
+}
+
+variable "logs_retention_bylabel_buckets" {
+  type        = string
+  description = "Comma separated list of numbers configuring per Pod-label logs retention (in days)."
+  default     = "7,14,30,60,90"
+
+  validation {
+    condition     = alltrue([for x in split(",", var.logs_retention_bylabel_buckets) : try(tonumber(trimspace(x)), 0) > 0])
+    error_message = "This should be a comma-separated list of numbers [>0]."
+  }
+}
+
+variable "logs_retention_days_cert_manager" {
+  type        = number
+  description = "Logs retention for cert-manager namespace in days."
+  default     = 30
+
+  validation {
+    condition     = var.logs_retention_days_cert_manager > 0
+    error_message = "The minimum retention period is 1 day."
+  }
+}
+
+variable "logs_retention_days_nginx_ingress" {
+  type        = number
+  description = "Logs retention for nginx-ingress namespace in days."
+  default     = 30
+
+  validation {
+    condition     = var.logs_retention_days_nginx_ingress > 0
+    error_message = "The minimum retention period is 1 day."
+  }
 }
 
 variable "letsencrypt_email" {
