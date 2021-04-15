@@ -1,0 +1,21 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: date10s
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: date10s
+  template:
+    metadata:
+      labels:
+        app: date10s
+        rkways.com/gke-infra-logdays: "7"
+    spec:
+      containers:
+      - image: busybox
+        name: busybox
+        imagePullPolicy: IfNotPresent
+        command: ['sh', '-c', 'while sleep 10; do date; done']
